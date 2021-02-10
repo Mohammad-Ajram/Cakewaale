@@ -1,0 +1,70 @@
+.login {
+  background-color: white;
+  margin-top: 10px;
+  padding: 10px 50px 60px 50px;
+}
+.login-title {
+  color: #cb202d;
+}
+.my-btn-primary {
+  background-color: #cb202d;
+  color: white;
+  border: 1px solid #cb202d;
+}
+.my-btn-primary:hover {
+  background-color: #a1222d;
+  color: white;
+  border: 1px solid #a1222d;
+}
+.my-btn-primary:focus {
+  box-shadow: none;
+}
+.my-btn-secondary {
+  background-color: #fcf1f2;
+  border: 1px solid #cb202d;
+  color: #cb202d;
+}
+.my-btn-secondary:hover {
+  background-color: #cb202d;
+  border: 1px solid #cb202d;
+  color: white;
+}
+.my-btn-secondary:focus {
+  box-shadow: none;
+}
+.btn-fb {
+  background-color: #3b5998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.btn-fb:hover {
+  transform: scale(1.05);
+}
+
+.btn-google {
+  background-color: white;
+  border: 1px solid black;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+.btn-google:hover {
+  transform: scale(1.05);
+}
+
+@media screen and (max-width: 600px) {
+  .login {
+    margin-top: 0px;
+  }
+}
+
+.ant-modal-footer {
+  display: none;
+}
