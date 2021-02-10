@@ -12,13 +12,6 @@ const Signup = ({ history }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [contactOne, setContactOne] = useState("");
-  const [contactTwo, setContactTwo] = useState("");
-  const [hNo, setHNo] = useState("");
-  const [landmark, setLandmark] = useState("");
-  const [locality, setLocality] = useState("");
-  const [city, setCity] = useState("dehradun");
-  const [state, setState] = useState("uttarakhand");
-  const [pincode, setPincode] = useState("");
 
   const { customer } = useSelector((state) => ({ ...state }));
 
@@ -33,19 +26,13 @@ const Signup = ({ history }) => {
       email,
       password,
       contactOne,
-      contactTwo,
-      hNo,
-      landmark,
-      locality,
-      city,
-      state,
-      pincode,
-      hNo,
-      landmark,
-      locality,
-      city,
-      state,
-      pincode
+      "",
+      "",
+      "",
+      "",
+      "dehradun",
+      "uttarakhand",
+      ""
     )
       .then((res) => {
         if (res.data.success === "1") {
@@ -95,7 +82,7 @@ const Signup = ({ history }) => {
               className="form-control"
             ></input>
             <br />
-            <label>Secondary Contact (Optional)</label>
+            {/* <label>Secondary Contact (Optional)</label>
             <br />
             <input
               type="number"
@@ -157,7 +144,7 @@ const Signup = ({ history }) => {
               onChange={(e) => setPincode(e.target.value)}
               className="form-control"
             ></input>
-            <br />
+            <br /> */}
             <label>Create Password</label>
             <br />
             <input

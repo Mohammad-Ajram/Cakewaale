@@ -14,8 +14,39 @@ const Cart = ({ history }) => {
   const [flavours, setFlavours] = useState([]);
 
   const { customer } = useSelector((state) => ({ ...state }));
-
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const loadCartItemss = () =>
+      getCartDetails(customer.token)
+        .then((res) => {
+          if (res.data.success === "1") {
+            let cTotal = 0;
+            let sTotal = 0;
+            for (let i = 0; i < res.data.cart_items.length; i++) {
+              cTotal += res.data.cart_items[i].total_price;
+              const discount = Math.round(
+                (res.data.cart_items[i].discounted_price /
+                  res.data.cart_items[i].price) *
+                  100
+              );
+
+              sTotal += res.data.cart_items[i].total_price * (100 / discount);
+            }
+            setCartTotal(cTotal);
+            setSubTotal(sTotal);
+            setCartItems(res.data.cart_items);
+            dispatch({
+              type: "GET_CART",
+              payload: { ...customer, cartItems: res.data.cart_items },
+            });
+          } else setCartItems([]);
+        })
+        .catch((err) => console.log(err));
+
+    loadCartItemss();
+  }, [customer.token]);
+
   useEffect(() => {
     if (!(customer && customer.token)) {
       toast.error("Log in to view your cart");
@@ -35,37 +66,6 @@ const Cart = ({ history }) => {
         else setCartItems([]);
       })
       .catch((err) => console.log(err));
-
-  useEffect(() => {
-    const loadCartItemss = () =>
-      getCartDetails(customer.token)
-        .then((res) => {
-          if (res.data.success === "1") {
-            let cTotal = 0;
-            let sTotal = 0;
-            for (let i = 0; i < res.data.cart_items.length; i++) {
-              cTotal += res.data.cart_items[i].total_price;
-              const discount = Math.round(
-                (res.data.cart_items[i].discounted_price /
-                  res.data.cart_items[i].price) *
-                  100
-              );
-
-              sTotal += res.data.cart_items[i].total_price * (100 / discount);
-            }
-            if (cartTotal === 0) setCartTotal(cTotal);
-            if (subTotal === 0) setSubTotal(sTotal);
-            if (cartItems.length === 0) setCartItems(res.data.cart_items);
-            dispatch({
-              type: "GET_CART",
-              payload: { ...customer, cartItems: res.data.cart_items },
-            });
-          } else setCartItems([]);
-        })
-        .catch((err) => console.log(err));
-
-    loadCartItemss();
-  }, []);
 
   const handleCheckout = () => {
     dispatch({
