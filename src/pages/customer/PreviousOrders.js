@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { getPreviousOrders } from "../../functions/customer";
 
-const PreviousOrders = () => {
+const PreviousOrders = ({ history }) => {
   const [previousOrders, setPreviousOrders] = useState([]);
 
   const { customer } = useSelector((state) => ({ ...state }));
-
+  if (!customer) history.push("/");
   useEffect(() => {
     const loadPreviousOrders = () =>
       getPreviousOrders(customer.token)
