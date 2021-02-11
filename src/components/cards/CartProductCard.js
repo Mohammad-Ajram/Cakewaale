@@ -138,8 +138,8 @@ const CartProductCard = ({
     });
   };
 
-  const addItemToWishlist = () => {
-    addToWishlist(product.product_id, weight, customer.token)
+  const addItemToWishlist = async () => {
+    addToWishlist(product.product_id, minWeight, customer.token)
       .then((res) => {
         if (res.data.success === "1") {
           toast.warning("Item moved to wishlist");
