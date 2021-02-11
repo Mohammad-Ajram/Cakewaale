@@ -92,7 +92,7 @@ const WishlistProductCard = ({ product, loadWishlist }) => {
         product.product_id,
         flavour,
         weight,
-        product.discounted_price,
+        discountedPrice,
         customer.token
       )
         .then((res) => {
