@@ -17,35 +17,37 @@ const Cart = ({ history }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const loadCartItemss = () =>
-      getCartDetails(customer.token)
-        .then((res) => {
-          if (res.data.success === "1") {
-            let cTotal = 0;
-            let sTotal = 0;
-            for (let i = 0; i < res.data.cart_items.length; i++) {
-              cTotal += res.data.cart_items[i].total_price;
-              const discount = Math.round(
-                (res.data.cart_items[i].discounted_price /
-                  res.data.cart_items[i].price) *
-                  100
-              );
+    if (customer) {
+      const loadCartItemss = () =>
+        getCartDetails(customer.token)
+          .then((res) => {
+            if (res.data.success === "1") {
+              let cTotal = 0;
+              let sTotal = 0;
+              for (let i = 0; i < res.data.cart_items.length; i++) {
+                cTotal += res.data.cart_items[i].total_price;
+                const discount = Math.round(
+                  (res.data.cart_items[i].discounted_price /
+                    res.data.cart_items[i].price) *
+                    100
+                );
 
-              sTotal += res.data.cart_items[i].total_price * (100 / discount);
-            }
-            setCartTotal(cTotal);
-            setSubTotal(sTotal);
-            setCartItems(res.data.cart_items);
-            dispatch({
-              type: "GET_CART",
-              payload: { ...customer, cartItems: res.data.cart_items },
-            });
-          } else setCartItems([]);
-        })
-        .catch((err) => console.log(err));
+                sTotal += res.data.cart_items[i].total_price * (100 / discount);
+              }
+              setCartTotal(cTotal);
+              setSubTotal(sTotal);
+              setCartItems(res.data.cart_items);
+              dispatch({
+                type: "GET_CART",
+                payload: { ...customer, cartItems: res.data.cart_items },
+              });
+            } else setCartItems([]);
+          })
+          .catch((err) => console.log(err));
 
-    loadCartItemss();
-  }, [customer.token]);
+      loadCartItemss();
+    }
+  }, []);
 
   useEffect(() => {
     if (!(customer && customer.token)) {
@@ -81,7 +83,7 @@ const Cart = ({ history }) => {
   return (
     <>
       <h2 className="section-title">My Cart ({cartItems.length} items)</h2>
-      {!customer.cartItems && (
+      {cartItems && !(cartItems.length > 0) && (
         <div
           className="container-fluid"
           style={{
@@ -96,7 +98,7 @@ const Cart = ({ history }) => {
           <h4 className="text-center">Oops! Your Cart is empty</h4>
         </div>
       )}
-      {customer.cartItems && (
+      {customer && customer.cartItems && (
         <div className="container-fluid">
           <div className="row">
             <div className="col-md-8 ">

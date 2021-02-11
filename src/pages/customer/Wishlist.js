@@ -4,13 +4,22 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import EmptyWishlist from "../../images/empty-wishlist.png";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
-const Wishlist = () => {
+const Wishlist = ({ history }) => {
   const [wishlist, setWishlist] = useState([]);
 
   const { customer } = useSelector((state) => ({ ...state }));
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!(customer && customer.token)) {
+      toast.error("Log in to view your wishlist");
+
+      history.push("/login");
+    }
+  }, [customer, history]);
 
   const loadWishlist = () => {
     getWishlist(customer.token)
@@ -22,27 +31,29 @@ const Wishlist = () => {
   };
 
   useEffect(() => {
-    const loadWishlists = () => {
-      getWishlist(customer.token)
-        .then((res) => {
-          if (res.data.success === "1") {
-            setWishlist(res.data.fav_items);
+    if (customer) {
+      const loadWishlists = () => {
+        getWishlist(customer.token)
+          .then((res) => {
+            if (res.data.success === "1") {
+              setWishlist(res.data.fav_items);
 
-            dispatch({
-              type: "GET_WISHLIST",
-              payload: { ...customer, wishlist: res.data.fav_items },
-            });
-          } else {
-            setWishlist([]);
-            dispatch({
-              type: "GET_WISHLIST",
-              payload: { ...customer, wishlist: undefined },
-            });
-          }
-        })
-        .catch((err) => console.log(err));
-    };
-    loadWishlists();
+              dispatch({
+                type: "GET_WISHLIST",
+                payload: { ...customer, wishlist: res.data.fav_items },
+              });
+            } else {
+              setWishlist([]);
+              dispatch({
+                type: "GET_WISHLIST",
+                payload: { ...customer, wishlist: undefined },
+              });
+            }
+          })
+          .catch((err) => console.log(err));
+      };
+      loadWishlists();
+    }
   }, []);
 
   return (

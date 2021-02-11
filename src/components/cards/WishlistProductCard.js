@@ -18,8 +18,6 @@ const WishlistProductCard = ({ product, loadWishlist }) => {
 
   const discount = 100 - (product.discounted_price / product.price) * 100;
 
-  console.log("DIscount", discount);
-
   const { customer } = useSelector((state) => ({ ...state }));
 
   const history = useHistory();

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import "../../stylesheets/topnav.css";
 import Logo from "../../images/logo.png";
 import { Drawer } from "antd";
 import { useHistory } from "react-router-dom";

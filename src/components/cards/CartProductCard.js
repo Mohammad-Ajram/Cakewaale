@@ -52,8 +52,6 @@ const CartProductCard = ({
     );
   }, [product.product_id]);
 
-  console.log(product);
-
   const increaseWeight = () => {
     if (weight < 10) {
       setDisabled(true);
@@ -64,7 +62,6 @@ const CartProductCard = ({
         customer.token
       ).then((res) => {
         setDisabled(false);
-        console.log(res.data);
       });
       cartItems[index] = {
         ...cartItems[index],
@@ -96,7 +93,6 @@ const CartProductCard = ({
         customer.token
       ).then((res) => {
         setDisabled(false);
-        console.log(res.data);
       });
       cartItems[index] = {
         ...cartItems[index],
@@ -279,7 +275,6 @@ const CartProductCard = ({
       customer.token
     ).then((res) => {
       setDisabled(false);
-      console.log(res.data);
     });
     setFlavour(e.target.value);
     cartItems[index] = {
@@ -321,7 +316,6 @@ const CartProductCard = ({
         customer.token
       ).then((res) => {
         setDisabled(false);
-        console.log(res.data);
       });
       setCartTotal(
         cartTotal - discountedPrice + (discountedPrice / qty) * (qty + 1)
@@ -351,7 +345,6 @@ const CartProductCard = ({
         customer.token
       ).then((res) => {
         setDisabled(false);
-        console.log(res.data);
       });
 
       setCartTotal(
@@ -382,7 +375,6 @@ const CartProductCard = ({
       customer.token
     ).then((res) => {
       setDisabled(false);
-      console.log(res.data);
     });
 
     setChecked(!checked);
@@ -507,7 +499,7 @@ const CartProductCard = ({
                 discountedPrice,
                 e.target.value,
                 customer.token
-              ).then((res) => console.log(res.data));
+              );
             }}
           />
           <br />
@@ -523,7 +515,7 @@ const CartProductCard = ({
                 discountedPrice,
                 e.target.value,
                 customer.token
-              ).then((res) => console.log(res.data));
+              );
             }}
           />
         </div>
