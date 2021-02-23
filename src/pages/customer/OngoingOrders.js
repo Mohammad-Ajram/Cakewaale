@@ -12,14 +12,14 @@ const OngoingOrders = ({ history }) => {
   const loadOngoingOrders = () =>
     getOngoingOrders(customer.token)
       .then((res) => {
-        setOngoingOrders(res.data.Ongoing_Orders);
+        if(res.data.Ongoing_Orders) setOngoingOrders(res.data.Ongoing_Orders);
       })
       .catch((err) => console.log(err));
   useEffect(() => {
     const loadOngoingOrderss = () =>
       getOngoingOrders(customer.token)
         .then((res) => {
-          setOngoingOrders(res.data.Ongoing_Orders);
+          if(res.data.Ongoing_Orders) setOngoingOrders(res.data.Ongoing_Orders);
         })
         .catch((err) => console.log(err));
     loadOngoingOrderss();
