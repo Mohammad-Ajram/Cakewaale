@@ -36,12 +36,12 @@ const Search = () => {
               count={8}
               classValue="col-6 col-md-4 col-lg-3 p-1 product-card-wrapper"
             />
-          ) : products.filter((item) => item.product_name.includes(keyword))
+          ) : products.filter((item) =>  item.product_name.toLowerCase().includes(keyword.toLowerCase()))
               .length > 0 ? (
             products.length > 0 &&
             products
               .filter((item) =>
-                item.product_name.toLowerCase().includes(keyword)
+                item.product_name.toLowerCase().includes(keyword.toLowerCase())
               )
               .map((item, i) => (
                 <div

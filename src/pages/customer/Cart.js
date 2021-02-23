@@ -15,10 +15,11 @@ const Cart = ({ history }) => {
 
   const { customer } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
+  console.log("run");
 
   useEffect(() => {
-    if (customer) {
-      const loadCartItemss = () =>
+    const loadCartItemss = () => {
+      if (customer) {
         getCartDetails(customer.token)
           .then((res) => {
             if (res.data.success === "1") {
@@ -44,9 +45,9 @@ const Cart = ({ history }) => {
             } else setCartItems([]);
           })
           .catch((err) => console.log(err));
-
-      loadCartItemss();
-    }
+      }
+    };
+    loadCartItemss();
   }, []);
 
   useEffect(() => {

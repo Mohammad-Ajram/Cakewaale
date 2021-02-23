@@ -91,7 +91,9 @@ const Topnav = () => {
                     color: "#cb202d",
                   }}
                 >
-                  <strong>Hello {customer.name}</strong>
+                  <strong>
+                    <i className="fa fa-user"></i>&nbsp;Hello {customer.name}
+                  </strong>
                 </h6>
                 <hr style={{ margin: "10px 0 0 0" }} />
                 <button
@@ -161,61 +163,90 @@ const Topnav = () => {
         </h6>
         {customer && customer.token && (
           <h6 className="text-center">
+            <i className="fa fa-user" style={{ color: "grey" }}></i>
+            &nbsp;
             <strong>Hello {customer.name}</strong>
           </h6>
         )}
         <hr />
         <ul className="menu-list">
           {!customer && (
-            <Link to="/login" onClick={() => setVisible(false)}>
-              <li className="sidebar-link">Login / Signup</li>
-            </Link>
+            <li className="sidebar-link">
+              <Link
+                style={{ color: "black" }}
+                to="/login"
+                onClick={() => setVisible(false)}
+              >
+                Login / Signup
+              </Link>
+            </li>
           )}
-          <Link to="/" onClick={() => setVisible(false)}>
-            <li className="sidebar-link">Home</li>
-          </Link>
-          <Link to="/about" onClick={() => setVisible(false)}>
-            {" "}
-            <li className="sidebar-link">About</li>
-          </Link>
-          <Link to="/privacy-policy" onClick={() => setVisible(false)}>
-            {" "}
-            <li className="sidebar-link">Privacy Policy</li>
-          </Link>
-
-          <li>
-            {customer && customer.token && (
-              <>
-                <Link to="user/profile" onClick={() => setVisible(false)}>
-                  <li className="sidebar-link">My Profile</li>
-                </Link>
-                <Link
-                  to="user/ongoing-orders"
-                  onClick={() => setVisible(false)}
-                >
-                  <li className="sidebar-link">Ongoing orders</li>
-                </Link>
-                <Link
-                  to="user/previous-orders"
-                  onClick={() => setVisible(false)}
-                >
-                  <li className="sidebar-link">Previous orders</li>
-                </Link>
-                <Link to="user/wishlist" onClick={() => setVisible(false)}>
-                  <li className="sidebar-link">Wishlist</li>
-                </Link>
-                {/* <Link to="/contact-us" onClick={() => setVisible(false)}>
+          <li className="sidebar-link">
+            <Link
+              style={{ color: "black" }}
+              to="/"
+              onClick={() => setVisible(false)}
+            >
+              Home
+            </Link>
+          </li>
+          {customer && customer.token && (
+            <>
+              <Link to="user/profile" onClick={() => setVisible(false)}>
+                <li className="sidebar-link">My Profile</li>
+              </Link>
+              <Link to="user/ongoing-orders" onClick={() => setVisible(false)}>
+                <li className="sidebar-link">Ongoing orders</li>
+              </Link>
+              <Link to="user/previous-orders" onClick={() => setVisible(false)}>
+                <li className="sidebar-link">Previous orders</li>
+              </Link>
+              <Link to="user/wishlist" onClick={() => setVisible(false)}>
+                <li className="sidebar-link">Wishlist</li>
+              </Link>
+              <Link to="/feedback" onClick={() => setVisible(false)}>
+                <li className="sidebar-link">Feedback</li>
+              </Link>
+              <Link to="/faq" onClick={() => setVisible(false)}>
+                <li className="sidebar-link">Faq</li>
+              </Link>
+              {/* <Link to="/contact-us" onClick={() => setVisible(false)}>
                   <li className="sidebar-link">Contact us</li>
                 </Link> */}
-                <button
-                  onClick={handleLogout}
-                  className="btn my-btn-primary btn-block"
-                >
-                  Logout
-                </button>
-              </>
-            )}
+            </>
+          )}
+          <li className="sidebar-link">
+            <Link
+              style={{ color: "black" }}
+              to="/about"
+              onClick={() => setVisible(false)}
+            >
+              {" "}
+              About
+            </Link>
+          </li>{" "}
+          <li className="sidebar-link">
+            {" "}
+            <Link
+              style={{ color: "black" }}
+              to="/privacy-policy"
+              onClick={() => setVisible(false)}
+            >
+              Privacy Policy
+            </Link>
           </li>
+          {customer && customer.token && (
+            <>
+              <br />
+              <br />
+              <button
+                onClick={handleLogout}
+                className="btn my-btn-primary btn-block"
+              >
+                Logout
+              </button>
+            </>
+          )}
         </ul>
       </Drawer>
     </>

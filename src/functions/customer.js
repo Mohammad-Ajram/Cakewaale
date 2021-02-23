@@ -163,12 +163,13 @@ export const changeSuggestion = async (id, total, suggestion, token) =>
       },
     }
   );
-export const placeOrder = async (delivery_date, payment_method, token) =>
+export const placeOrder = async (delivery_date, payment_method, range, token) =>
   await axios.post(
     `${process.env.REACT_APP_API}/api/customer/order/new`,
     {
       delivery_date,
       payment_method,
+      range,
     },
     {
       headers: {

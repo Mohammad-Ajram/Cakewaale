@@ -1,7 +1,11 @@
 import CheckoutProductCard from "../../components/cards/CheckoutProductCard";
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
-import { getProfile, placeOrder } from "../../functions/customer";
+import {
+  getProfile,
+  placeOrder,
+  getCartDetails,
+} from "../../functions/customer";
 import { toast } from "react-toastify";
 import axios from "axios";
 import logo from "../../images/logo.png";
@@ -19,6 +23,8 @@ const Checkout = ({ history }) => {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [range, setRange] = useState("0");
 
   const [city, setCity] = useState("dehradun");
   const [state, setState] = useState("uttarakhand");
@@ -37,6 +43,15 @@ const Checkout = ({ history }) => {
   const dispatch = useDispatch();
 
   const { customer } = useSelector((state) => ({ ...state }));
+
+  useEffect(() => {
+    getCartDetails(customer.token)
+      .then((res) => {
+        if (res.data.success === "1") setProducts(res.data.cart_items);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   let intended = history.location.state;
   if (!intended || !customer) history.push("/");
 
@@ -49,7 +64,6 @@ const Checkout = ({ history }) => {
 
   useEffect(() => {
     getProfile(customer.token).then((res) => {
-      console.log(res.data);
       setHNo(res.data.customer_detail.delivery_houseNo);
       setLocality(res.data.customer_detail.delivery_locality);
       setLandmark(res.data.customer_detail.delivery_landmark);
@@ -91,8 +105,6 @@ const Checkout = ({ history }) => {
 
     // Getting the order details back
     const { amount, order_id } = result.data;
-
-    console.log("result", result.data);
 
     const options = {
       key: "rzp_test_76kOqpWsAqbalP", // Enter the Key ID generated from the Dashboard
@@ -167,15 +179,23 @@ const Checkout = ({ history }) => {
     if (!paymentMethod) toast.error("Pleaseselect payment method");
     else if (!deliveryDate || !deliveryTime)
       toast.error("Please select delivery time and date");
+    else if (range === "0") toast.error("Please select range");
     else
       placeOrder(
         deliveryDate + " " + deliveryTime + ":00",
         paymentMethod === "3" ? "1" : paymentMethod,
+        range,
         customer.token
       )
         .then((res) => {
-          console.log(res.data);
-          displayRazorpay(res);
+          if (res.data.success === "1") {
+            if (paymentMethod === "0" || paymentMethod === "1") {
+              toast.success(
+                "Order successfully placed. Thank you for shopping with us!"
+              );
+              history.push("/");
+            } else displayRazorpay(res);
+          }
         })
         .catch((err) => console.log(err));
   };
@@ -276,7 +296,6 @@ const Checkout = ({ history }) => {
         </form>
       </Modal>
       <h2 className="section-title">Checkout</h2>
-      {paymentMethod}
       <div className="conatiner-fluid">
         <div className="row" style={{ width: "100%" }}>
           <div className="col-md-8 px-5">
@@ -312,9 +331,14 @@ const Checkout = ({ history }) => {
               name="payment_method"
               value="0"
               checked={paymentMethod === "0"}
-              onChange={(e) => setPaymentMethod("0")}
+              onChange={(e) => {
+                setPaymentMethod("0");
+                window.alert(
+                  "We are operating from Garhi Cantt and charging a minimal of Rs 10 per kilometer"
+                );
+              }}
             />
-            &nbsp;Cash on delivery
+            &nbsp; Cash on delivery
             <br />
             <input
               type="radio"
@@ -323,14 +347,19 @@ const Checkout = ({ history }) => {
               checked={paymentMethod === "1"}
               onChange={(e) => setPaymentMethod("1")}
             />
-            &nbsp;Pay online
+            &nbsp;Pay online and get delivered to specified address
             <br />
             <input
               type="radio"
               name="payment_method"
               value="2"
               checked={paymentMethod === "2"}
-              onChange={(e) => setPaymentMethod("2")}
+              onChange={(e) => {
+                setPaymentMethod("2");
+                window.alert(
+                  "Please take the screenshot of the pickup address: 4L/1 Garhi Cantt, near D.D. College, Rajendra Nagar, Ballupur Chowk, Dehradun. Contact Number: +91 7253020679"
+                );
+              }}
             />
             &nbsp;Pick myself
             <br />
@@ -339,7 +368,12 @@ const Checkout = ({ history }) => {
               name="payment_method"
               value="3"
               checked={paymentMethod === "3"}
-              onChange={(e) => setPaymentMethod("3")}
+              onChange={(e) => {
+                setPaymentMethod("3");
+                window.alert(
+                  "Please take the screenshot of the pickup address: 4L/1 Garhi Cantt, near D.D. College, Rajendra Nagar, Ballupur Chowk, Dehradun. Contact Number: +91 7253020679"
+                );
+              }}
             />
             &nbsp;Pay online and pick myself
             <br />
@@ -359,15 +393,24 @@ const Checkout = ({ history }) => {
               className="form-control"
               onChange={(e) => setDeliveryTime(e.target.value)}
             />
+            <label className="checkout-label">Range : {range} km</label>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={range}
+              className="form-control"
+              onChange={(e) => setRange(e.target.value)}
+            />
           </div>
-          <div className="col-md-4">
+          <div className="col-md-4 mt-5 px-5">
             <h4 className="order-summary-title">
-              Order Summary({customer.cartItems ? customer.cartItems.length : 0}{" "}
-              items)
+              Order Summary
+              <br />({customer.cartItems ? customer.cartItems.length : 0} items)
             </h4>
-            {customer.cartItems &&
-              customer.cartItems.length &&
-              customer.cartItems.map((item) => (
+            <br />
+            {products.length > 0 &&
+              products.map((item) => (
                 <CheckoutProductCard key={item.product_id} product={item} />
               ))}
             <hr />

@@ -76,7 +76,10 @@ function App() {
     <div className="App">
       <Suspense
         fallback={
-          <div className="col p-5 m-5 text-center" style={{ fontSize: "48px" }}>
+          <div
+            className="p-5 m-5 text-center"
+            style={{ fontSize: "48px", color: "#cb202d" }}
+          >
             <LoadingOutlined />
           </div>
         }
