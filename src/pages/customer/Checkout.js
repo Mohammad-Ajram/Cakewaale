@@ -396,6 +396,13 @@ const Checkout = ({ history }) => {
             <label className="checkout-label">Range : {range} km</label>
             <input
               type="range"
+              disabled={
+                paymentMethod === "2" ||
+                paymentMethod === "3" ||
+                paymentMethod === ""
+                  ? true
+                  : false
+              }
               min="0"
               max="100"
               value={range}
@@ -415,9 +422,18 @@ const Checkout = ({ history }) => {
               ))}
             <hr />
             <span style={{ width: "100%" }}>
-              <label className="checkout-label">Total</label>
+              <label className="checkout-label">Delivery Charges</label>
               <label className="float-right checkout-label">
-                <strong>₹{total}</strong>
+                <strong>₹{range * 10}</strong>
+              </label>
+            </span>
+            <br />
+            <span style={{ width: "100%" }}>
+              <label className="checkout-label">
+                Total<small>(including delivery charges)</small>
+              </label>
+              <label className="float-right checkout-label">
+                <strong>₹{total + range * 10}</strong>
               </label>
             </span>
             <button
