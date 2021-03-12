@@ -125,6 +125,9 @@ const Topnav = () => {
                 >
                   Previous Orders
                 </Link>
+                <Link className="btn-block ml-0 item" to="/promocode">
+                  Promocodes
+                </Link>
               </>
             )}
           </div>
@@ -203,6 +206,9 @@ const Topnav = () => {
               </Link>
               <Link to="user/wishlist" onClick={() => setVisible(false)}>
                 <li className="sidebar-link">Wishlist</li>
+              </Link>
+              <Link to="/promocode" onClick={() => setVisible(false)}>
+                <li className="sidebar-link">Promocodes</li>
               </Link>
               <Link to="/feedback" onClick={() => setVisible(false)}>
                 <li className="sidebar-link">Feedback</li>
