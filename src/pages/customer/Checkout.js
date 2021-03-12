@@ -11,6 +11,7 @@ import axios from "axios";
 import logo from "../../images/logo.png";
 import { useDispatch } from "react-redux";
 import { Modal } from "antd";
+import { checkPromo } from "../../functions/customer";
 
 const Checkout = ({ history }) => {
   const [hNo, setHNo] = useState("");
@@ -22,7 +23,13 @@ const Checkout = ({ history }) => {
   const [paymentMethod, setPaymentMethod] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
+  const [promo, setPromo] = useState("");
+  const [couponDiscount, setCouponDiscount] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isCodModalVisible, setIsCodModalVisible] = useState(false);
+  const [isPickMyselfModalVisible, setIsPickMyselfModalVisible] = useState(
+    false
+  );
   const [products, setProducts] = useState([]);
   const [range, setRange] = useState("0");
 
@@ -35,10 +42,14 @@ const Checkout = ({ history }) => {
 
   const handleOk = () => {
     setIsModalVisible(false);
+    setIsCodModalVisible(false);
+    setIsPickMyselfModalVisible(false);
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
+    setIsCodModalVisible(false);
+    setIsPickMyselfModalVisible(false);
   };
   const dispatch = useDispatch();
 
@@ -107,8 +118,8 @@ const Checkout = ({ history }) => {
     const { amount, order_id } = result.data;
 
     const options = {
-      key: "rzp_test_76kOqpWsAqbalP", // Enter the Key ID generated from the Dashboard
-      amount: amount.toString(),
+      key: "rzp_live_BUrew3klYGQQzr", // Enter the Key ID generated from the Dashboard
+      amount: amount ? amount.toString() : "",
       currency: "INR",
       name: "Cakewaale",
       description: "Cake  Transaction",
@@ -122,6 +133,10 @@ const Checkout = ({ history }) => {
           razorpay_signature: response.razorpay_signature,
           pickup: paymentMethod === "1" ? "0" : "1",
           delivery_date: deliveryDate + " " + deliveryTime + ":00",
+          range: String(range),
+          promo: String(
+            Math.round((couponDiscount / 100) * (total + range * 10))
+          ),
         };
 
         await axios.post("https://cakewaale.com/api/customer/success", data, {
@@ -163,7 +178,6 @@ const Checkout = ({ history }) => {
           },
         }
       );
-      console.log(result.data);
       alert(response.error.code);
       alert(response.error.description);
       alert(response.error.source);
@@ -176,23 +190,29 @@ const Checkout = ({ history }) => {
   }
 
   const handleOrder = () => {
-    if (!paymentMethod) toast.error("Pleaseselect payment method");
+    if (!paymentMethod) toast.error("Please select payment method");
     else if (!deliveryDate || !deliveryTime)
       toast.error("Please select delivery time and date");
-    else if (range === "0") toast.error("Please select range");
+    else if ((paymentMethod === "0" || paymentMethod === "1") && range === "0")
+      toast.error("Please select range");
     else
       placeOrder(
         deliveryDate + " " + deliveryTime + ":00",
         paymentMethod === "3" ? "1" : paymentMethod,
-        range,
+        String(range),
+        String(Math.round((couponDiscount / 100) * (total + range * 10))),
         customer.token
       )
         .then((res) => {
           if (res.data.success === "1") {
-            if (paymentMethod === "0" || paymentMethod === "1") {
+            if (paymentMethod === "0" || paymentMethod === "2") {
               toast.success(
                 "Order successfully placed. Thank you for shopping with us!"
               );
+              dispatch({
+                type: "GET_CART",
+                payload: { ...customer, cartItems: undefined },
+              });
               history.push("/");
             } else displayRazorpay(res);
           }
@@ -226,6 +246,35 @@ const Checkout = ({ history }) => {
       .catch((err) => console.log(err));
   };
 
+  const showCodModal = () => setIsCodModalVisible(true);
+
+  const showPickMyselfModal = () => setIsPickMyselfModalVisible(true);
+
+  const ndate =
+    new Date().getDate().toString().length === 1
+      ? "0" + new Date().getDate().toString()
+      : new Date().getDate().toString();
+  const month =
+    (new Date().getMonth() + 1).toString().length === 1
+      ? "0" + (new Date().getMonth() + 1).toString()
+      : (new Date().getMonth() + 1).toString();
+
+  const minDate = `${new Date().getFullYear()}-${month}-${ndate}`;
+
+  const applyCoupon = () => {
+    let found = false;
+    checkPromo(promo, customer.token)
+      .then((res) => {
+        if (res.data.success === "1") {
+          toast.success("Promocode Applied");
+          setCouponDiscount(res.data.discount);
+        } else {
+          toast.error("Invalid promocode");
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <>
       <Modal
@@ -235,65 +284,97 @@ const Checkout = ({ history }) => {
         onCancel={handleCancel}
         centered
       >
-        <form onSubmit={changeAddress}>
-          <label>House No.</label>
-          <br />
-          <input
-            type="number"
-            value={hNo}
-            onChange={(e) => setHNo(e.target.value)}
-            className="form-control"
-          ></input>
-          <br />
-          <label>Landmark</label>
-          <br />
-          <input
-            type="text"
-            value={landmark}
-            onChange={(e) => setLandmark(e.target.value)}
-            className="form-control"
-          ></input>
-          <br />
-          <label>Locality</label>
-          <br />
-          <input
-            type="text"
-            value={locality}
-            onChange={(e) => setLocality(e.target.value)}
-            className="form-control"
-          ></input>
-          <br />
-          <label>City</label>
-          <select
-            className="form-control"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-          >
-            <option value="dehradun">Dehradun</option>
-          </select>
-          <br />
-          <label>State</label>
-          <select
-            className="form-control"
-            value={state}
-            onChange={(e) => setState(e.target.value)}
-          >
-            <option value="uttarakhand">Uttarakhand</option>
-          </select>
-          <br />
-          <label>Pincode</label>
-          <br />
-          <input
-            type="number"
-            value={pincode}
-            onChange={(e) => setPincode(e.target.value)}
-            className="form-control"
-          ></input>
-          <br />
-          <button className="btn my-btn-primary btn-block">
-            Update Address
-          </button>
-        </form>
+        <div className="px-4 pb-4">
+          <form onSubmit={changeAddress}>
+            <label>House No.</label>
+            <br />
+            <input
+              type="number"
+              value={hNo}
+              onChange={(e) => setHNo(e.target.value)}
+              className="form-control"
+            ></input>
+            <br />
+            <label>Landmark</label>
+            <br />
+            <input
+              type="text"
+              value={landmark}
+              onChange={(e) => setLandmark(e.target.value)}
+              className="form-control"
+            ></input>
+            <br />
+            <label>Locality</label>
+            <br />
+            <input
+              type="text"
+              value={locality}
+              onChange={(e) => setLocality(e.target.value)}
+              className="form-control"
+            ></input>
+            <br />
+            <label>City</label>
+            <select
+              className="form-control"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+            >
+              <option value="dehradun">Dehradun</option>
+            </select>
+            <br />
+            <label>State</label>
+            <select
+              className="form-control"
+              value={state}
+              onChange={(e) => setState(e.target.value)}
+            >
+              <option value="uttarakhand">Uttarakhand</option>
+            </select>
+            <br />
+            <label>Pincode</label>
+            <br />
+            <input
+              type="number"
+              value={pincode}
+              onChange={(e) => setPincode(e.target.value)}
+              className="form-control"
+            ></input>
+            <br />
+            <button className="btn my-btn-primary btn-block">
+              Update Address
+            </button>
+          </form>
+        </div>
+      </Modal>
+      <Modal
+        title="Important Notice"
+        visible={isCodModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        centered
+      >
+        <div className="px-4 pb-2">
+          <p>
+            We are operating from Garhi Cantt and charging a minimal of Rs 10
+            per kilometer
+          </p>
+        </div>
+      </Modal>
+      <Modal
+        title="Important Notice"
+        visible={isPickMyselfModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        centered
+      >
+        <div className="px-4 pb-2">
+          {" "}
+          <p>
+            Please take the screenshot of the pickup address: 4L/1 Garhi Cantt,
+            near D.D. College, Rajendra Nagar, Ballupur Chowk, Dehradun. Contact
+            Number: +91 7253020679
+          </p>
+        </div>
       </Modal>
       <h2 className="section-title">Checkout</h2>
       <div className="conatiner-fluid">
@@ -333,9 +414,7 @@ const Checkout = ({ history }) => {
               checked={paymentMethod === "0"}
               onChange={(e) => {
                 setPaymentMethod("0");
-                window.alert(
-                  "We are operating from Garhi Cantt and charging a minimal of Rs 10 per kilometer"
-                );
+                showCodModal();
               }}
             />
             &nbsp; Cash on delivery
@@ -356,12 +435,10 @@ const Checkout = ({ history }) => {
               checked={paymentMethod === "2"}
               onChange={(e) => {
                 setPaymentMethod("2");
-                window.alert(
-                  "Please take the screenshot of the pickup address: 4L/1 Garhi Cantt, near D.D. College, Rajendra Nagar, Ballupur Chowk, Dehradun. Contact Number: +91 7253020679"
-                );
+                showPickMyselfModal();
               }}
             />
-            &nbsp;Pick myself
+            &nbsp;Pick myself and pay cash at our store
             <br />
             <input
               type="radio"
@@ -370,9 +447,7 @@ const Checkout = ({ history }) => {
               checked={paymentMethod === "3"}
               onChange={(e) => {
                 setPaymentMethod("3");
-                window.alert(
-                  "Please take the screenshot of the pickup address: 4L/1 Garhi Cantt, near D.D. College, Rajendra Nagar, Ballupur Chowk, Dehradun. Contact Number: +91 7253020679"
-                );
+                showPickMyselfModal();
               }}
             />
             &nbsp;Pay online and pick myself
@@ -384,6 +459,7 @@ const Checkout = ({ history }) => {
             <label className="checkout-label">Select delivery date</label>
             <input
               type="date"
+              min={minDate}
               className="form-control"
               onChange={(e) => setDeliveryDate(e.target.value)}
             />
@@ -393,22 +469,37 @@ const Checkout = ({ history }) => {
               className="form-control"
               onChange={(e) => setDeliveryTime(e.target.value)}
             />
-            <label className="checkout-label">Range : {range} km</label>
+            {(paymentMethod === "0" || paymentMethod === "1") && (
+              <>
+                <p className="budget checkout-label">
+                  Select your expected distance from Ballupur Chowk
+                </p>
+                <div class="slidecontainer">
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={range}
+                    className="range-slider"
+                    onChange={(e) => setRange(e.target.value)}
+                    id="myRange"
+                  />
+                  <p className="text-center">
+                    <strong>{range} kms</strong>
+                  </p>
+                </div>
+              </>
+            )}
+            <label className="checkout-label">Have Promocode?</label>
             <input
-              type="range"
-              disabled={
-                paymentMethod === "2" ||
-                paymentMethod === "3" ||
-                paymentMethod === ""
-                  ? true
-                  : false
-              }
-              min="0"
-              max="100"
-              value={range}
+              type="text"
               className="form-control"
-              onChange={(e) => setRange(e.target.value)}
+              onChange={(e) => setPromo(e.target.value)}
             />
+            <br />
+            <button className="btn my-btn-primary" onClick={applyCoupon}>
+              Apply
+            </button>
           </div>
           <div className="col-md-4 mt-5 px-5">
             <h4 className="order-summary-title">
@@ -421,21 +512,52 @@ const Checkout = ({ history }) => {
                 <CheckoutProductCard key={item.product_id} product={item} />
               ))}
             <hr />
-            <span style={{ width: "100%" }}>
-              <label className="checkout-label">Delivery Charges</label>
-              <label className="float-right checkout-label">
+            <div style={{ width: "100%" }}>
+              <span className="checkout-label">Delivery Charges</span>
+              <span className="float-right checkout-label">
                 <strong>₹{range * 10}</strong>
-              </label>
-            </span>
+              </span>
+            </div>
             <br />
-            <span style={{ width: "100%" }}>
-              <label className="checkout-label">
+            <div style={{ width: "100%" }}>
+              <span className="checkout-label">
                 Total<small>(including delivery charges)</small>
-              </label>
-              <label className="float-right checkout-label">
+              </span>
+              <span className="float-right checkout-label">
                 <strong>₹{total + range * 10}</strong>
-              </label>
-            </span>
+              </span>
+            </div>
+            {couponDiscount > 0 && (
+              <>
+                <br />
+                <div style={{ width: "100%" }}>
+                  <span className="checkout-label">Promocode Discount</span>
+                  <span className="float-right checkout-label">
+                    <strong>
+                      ₹
+                      {Math.round(
+                        (couponDiscount / 100) * (total + range * 10)
+                      )}
+                    </strong>
+                  </span>
+                </div>
+                <hr />
+                <div style={{ width: "100%" }}>
+                  <span className="checkout-label">
+                    Total<small>(after applying promocode)</small>
+                  </span>
+                  <span className="float-right checkout-label">
+                    <strong>
+                      ₹
+                      {Math.round(
+                        ((100 - couponDiscount) / 100) * (total + range * 10)
+                      )}
+                    </strong>
+                  </span>
+                </div>
+              </>
+            )}
+            <br />
             <button
               className="btn my-btn-primary btn-block"
               onClick={handleOrder}

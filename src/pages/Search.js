@@ -26,6 +26,8 @@ const Search = () => {
     loadProducts();
   }, []);
 
+  console.log(products);
+
   return (
     <>
       <h2 className="section-title">Product List</h2>
@@ -36,12 +38,23 @@ const Search = () => {
               count={8}
               classValue="col-6 col-md-4 col-lg-3 p-1 product-card-wrapper"
             />
-          ) : products.filter((item) =>  item.product_name.toLowerCase().includes(keyword.toLowerCase()))
-              .length > 0 ? (
+          ) : products.filter(
+              (item) =>
+                item.product_name
+                  .toLowerCase()
+                  .includes(keyword.toLowerCase()) ||
+                item.category.toLowerCase().includes(keyword.toLowerCase()) ||
+                item.flavour.toLowerCase().includes(keyword.toLowerCase())
+            ).length > 0 ? (
             products.length > 0 &&
             products
-              .filter((item) =>
-                item.product_name.toLowerCase().includes(keyword.toLowerCase())
+              .filter(
+                (item) =>
+                  item.product_name
+                    .toLowerCase()
+                    .includes(keyword.toLowerCase()) ||
+                  item.category.toLowerCase().includes(keyword.toLowerCase()) ||
+                  item.flavour.toLowerCase().includes(keyword.toLowerCase())
               )
               .map((item, i) => (
                 <div

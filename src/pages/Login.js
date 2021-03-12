@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { getCartDetails } from "../functions/customer";
+import { GoogleLogin } from "react-google-login";
 
 const Login = ({ history }) => {
   const [email, setEmail] = useState("");
@@ -60,7 +61,7 @@ const Login = ({ history }) => {
   const handleGoogleLogin = async () => {
     let intended = history.location.state;
     await axios
-      .get(`${process.env.REACT_APP_API}/login/google`)
+      .get("https://techjam1101.pythonanywhere.com/api/customer/login/google")
       .then((res) => {
         if (res.data.success === "1") {
           getCartDetails(res.data.token)
@@ -94,6 +95,42 @@ const Login = ({ history }) => {
       })
       .catch((err) => console.log(err));
   };
+
+  const responseGoogle = async (response) => {
+    if (response.accessToken) {
+      let intended = history.location.state;
+      await axios
+        .post(`${process.env.REACT_APP_API}/api/customer/login/google`, {
+          email: response.profileObj.email,
+          name: response.profileObj.name,
+        })
+        .then((res) => {
+          if (res.data.success === "1") {
+            getCartDetails(res.data.token)
+              .then((response) => {
+                if (res.data.success === "1") {
+                  dispatch({
+                    type: "LOG_IN_CUSTOMER",
+                    payload: {
+                      name: res.data.name,
+                      token: res.data.token,
+                      cartItems: response.data.cart_items,
+                    },
+                  });
+                }
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+            if (intended) history.push(intended.from);
+            else history.push("/");
+          }
+        })
+        .catch((err) => console.log(err));
+    } else {
+      toast.error("Google Login failed!");
+    }
+  };
   return (
     <div className="container-fluid">
       <div className="row">
@@ -123,10 +160,26 @@ const Login = ({ history }) => {
             <button className="btn my-btn-primary btn-block">Log in</button>
             <br />
             <p className="text-center">Or</p>
-            <div className="btn btn-google" onClick={handleGoogleLogin}>
+            {/* <div className="btn btn-google" onClick={handleGoogleLogin}>
               <img src={Google} alt="google-icon" />
               Continue with google
-            </div>
+            </div> */}
+            <GoogleLogin
+              clientId="1092069209527-ah4qn93lim76rutudu0jc7esgnuhr91d.apps.googleusercontent.com"
+              buttonText="Login"
+              onSuccess={responseGoogle}
+              onFailure={responseGoogle}
+              render={(renderProps) => (
+                <div
+                  onClick={renderProps.onClick}
+                  disabled={renderProps.disabled}
+                  className="btn btn-google"
+                >
+                  <img src={Google} alt="google-icon" />
+                  Continue with google
+                </div>
+              )}
+            />
             <br />
             {/* <div className="btn btn-fb">
               <img src={Fb} alt="facebook-icon" />

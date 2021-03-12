@@ -12,14 +12,16 @@ const OngoingOrders = ({ history }) => {
   const loadOngoingOrders = () =>
     getOngoingOrders(customer.token)
       .then((res) => {
-        if(res.data.Ongoing_Orders) setOngoingOrders(res.data.Ongoing_Orders);
+        if (res.data.Ongoing_Orders) setOngoingOrders(res.data.Ongoing_Orders);
       })
       .catch((err) => console.log(err));
   useEffect(() => {
     const loadOngoingOrderss = () =>
       getOngoingOrders(customer.token)
         .then((res) => {
-          if(res.data.Ongoing_Orders) setOngoingOrders(res.data.Ongoing_Orders);
+          if (res.data.Ongoing_Orders)
+            setOngoingOrders(res.data.Ongoing_Orders);
+          else setOngoingOrders([]);
         })
         .catch((err) => console.log(err));
     loadOngoingOrderss();
@@ -40,23 +42,23 @@ const OngoingOrders = ({ history }) => {
       <div className="container-fluid">
         <div className="row">
           {ongoingOrders.length > 0 &&
-            ongoingOrders.map((item) => (
+            ongoingOrders.reverse().map((item) => (
               <div
-                className="col-md-8 mx-auto mb-5 p-3 order-card"
+                className="col-md-8 mx-auto mb-5 p-3 order-card col-10"
                 key={item.order_id}
               >
-                <h5>
+                <h6>
                   <strong>Order Id</strong> : {item.order_id}
-                </h5>
-                <h5>
+                </h6>
+                <h6>
                   <strong>Ordered on</strong>: {item.order_date}
-                </h5>
-                <h5>
+                </h6>
+                <h6>
                   <strong>Delivery Date</strong>: {item.delivery_date}
-                </h5>
-                <h5>
+                </h6>
+                <h6>
                   <strong>Total Items({item.products.length})</strong>
-                </h5>
+                </h6>
                 <ol style={{ fontSize: "16px", fontWeight: "700" }}>
                   {item.products.map((i) => (
                     <li key={i.product_id} className="mb-2">
@@ -70,9 +72,9 @@ const OngoingOrders = ({ history }) => {
                     </li>
                   ))}
                 </ol>
-                <h5>
-                  <strong>Total Price</strong> : ₹{item.bill}
-                </h5>
+                <h6>
+                  <strong>Total Bill : ₹{item.total_bill}</strong>
+                </h6>
                 <button
                   className="btn my-btn-primary btn-block"
                   onClick={() => cancelOngoingOrder(item.order_id)}

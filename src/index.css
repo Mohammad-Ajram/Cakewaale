@@ -100,7 +100,8 @@ body {
 .view-more {
   font-size: 16px;
   font-family: "Poppins", sans-serif;
-  color: #323232;
+  font-weight: 600;
+  color: #cb202d;
 }
 .save-btn-icon {
   transition: 0.3s all ease-out;
@@ -115,7 +116,7 @@ body {
     line-height: 24px;
   }
   .view-more {
-    font-size: 13px;
+    font-size: 14px;
   }
 }
 /*---------Category Card---------------*/
@@ -525,8 +526,6 @@ body {
 
   letter-spacing: 0.15em;
 
-  margin-top: 20px;
-
   color: #323232;
 }
 .order-summary-title {
@@ -620,7 +619,7 @@ body {
   margin-left: 6px;
   margin-right: 0;
   border-radius: 100%;
-  background-color: #33353d;
+  background-color: #cb202d;
 }
 .copyright-text {
   margin: 0;
@@ -639,6 +638,19 @@ body {
     text-align: center;
   }
 }
+@media (max-width: 450px) {
+  .site-footer {
+    display: none;
+  }
+  .space {
+    height: 50px;
+  }
+}
+@media (min-width: 450px) {
+  .space {
+    display: none;
+  }
+}
 .social-icons {
   padding-left: 0;
   margin-bottom: 0;
@@ -651,13 +663,13 @@ body {
 .social-icons li.title {
   margin-right: 15px;
   text-transform: uppercase;
-  color: #96a2b2;
+  color: white;
   font-weight: 700;
   font-size: 13px;
 }
 .social-icons a {
-  background-color: #eceeef;
-  color: #818a91;
+  background-color: #cb202d;
+  color: white;
   font-size: 16px;
   display: inline-block;
   line-height: 44px;
@@ -683,20 +695,18 @@ body {
   font-size: 14px;
 }
 .social-icons a.facebook:hover {
-  background-color: #3b5998;
-}
-.social-icons a.twitter:hover {
-  background-color: #00aced;
+  background-color: #cb202d;
 }
 .social-icons a.instagram:hover {
-  background: radial-gradient(
+  /* background: radial-gradient(
     circle at 30% 107%,
     #fdf497 0%,
     #fdf497 5%,
     #fd5949 45%,
     #d6249f 60%,
     #285aeb 90%
-  );
+  ); */
+  background: #cb202d;
 }
 @media (max-width: 767px) {
   .social-icons li.title {
@@ -1084,4 +1094,80 @@ input:checked + .slider:before {
     display: flex;
     align-items: center;
   }
+}
+
+/*-------Designing loader-------*/
+.loading-container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+.loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/*-------Designing Slider--------*/
+.slidecontainer {
+  width: 100%;
+}
+
+.range-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 15px;
+  border-radius: 5px;
+  background: #fcf1f2;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: 0.2s;
+  transition: opacity 0.2s;
+}
+
+.range-slider:hover {
+  opacity: 1;
+}
+
+.range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #cb202d;
+  cursor: pointer;
+}
+
+.range-slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #cb202d;
+  cursor: pointer;
+}
+/*-----Designing promocodes page-------*/
+.promo-li-item {
+  font-family: "Montserrat", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+}
+.code {
+  color: #cb202d;
+}
+.promo-list {
+  list-style: none;
+}
+.promo-list li::before {
+  content: "\2022"; /* Add content: \2022 is the CSS Code/unicode for a bullet */
+  color: #cb202d; /* Change the color */
+  font-weight: bold; /* If you want it to be bold */
+  font-size: 1.3rem;
+  display: inline-block; /* Needed to add space between the bullet and the text */
+  width: 1em; /* Also needed for space (tweak if needed) */
+  margin-left: -1em;
+}
+.ant-modal-body {
+  padding: 0px;
 }

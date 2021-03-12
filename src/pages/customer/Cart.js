@@ -15,7 +15,6 @@ const Cart = ({ history }) => {
 
   const { customer } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
-  console.log("run");
 
   useEffect(() => {
     const loadCartItemss = () => {
