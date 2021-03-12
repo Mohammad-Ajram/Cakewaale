@@ -78,33 +78,35 @@ const Home = ({ history }) => {
         onCancel={handleCancel}
         centered
       >
-        <form onSubmit={placeCustomisedOrder}>
-          <textarea
-            value={description}
-            className="form-control"
-            style={{ resize: "none", height: "150px" }}
-            placeholder={placeholder}
-            onChange={(e) => setDescription(e.target.value)}
-          ></textarea>
-          <br />
-          <div className="row">
-            <div className="col-12 mt-3">
-              <label className="btn my-btn-primary btn-block">
-                Upload photo
-                <input
-                  type="file"
-                  accept="image/*"
-                  encType="multipart/form-data"
-                  multiple
-                  hidden
-                  onChange={(e) => setFiles(e.target.files)}
-                ></input>
-              </label>
+        <div className="px-4 pb-4">
+          <form onSubmit={placeCustomisedOrder}>
+            <textarea
+              value={description}
+              className="form-control"
+              style={{ resize: "none", height: "150px" }}
+              placeholder={placeholder}
+              onChange={(e) => setDescription(e.target.value)}
+            ></textarea>
+            <br />
+            <div className="row">
+              <div className="col-12 mt-3">
+                <label className="btn my-btn-primary btn-block">
+                  Upload photo
+                  <input
+                    type="file"
+                    accept="image/*"
+                    encType="multipart/form-data"
+                    multiple
+                    hidden
+                    onChange={(e) => setFiles(e.target.files)}
+                  ></input>
+                </label>
+              </div>
             </div>
-          </div>
-          <br />
-          <button className="btn my-btn-primary btn-block">Submit</button>
-        </form>
+            <br />
+            <button className="btn my-btn-primary btn-block">Submit</button>
+          </form>
+        </div>
       </Modal>
       <div className="cover container-fluid">
         <h1 className="cover-title my-auto">

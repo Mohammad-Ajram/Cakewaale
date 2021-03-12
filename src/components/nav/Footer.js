@@ -92,15 +92,7 @@ const Footer = () => {
                   <i className="fa fa-facebook"></i>
                 </a>
               </li>
-              <li>
-                <a
-                  className="twitter"
-                  target="/"
-                  href="https://www.twitter.com"
-                >
-                  <i className="fa fa-twitter"></i>
-                </a>
-              </li>
+
               <li>
                 <a
                   className="instagram"

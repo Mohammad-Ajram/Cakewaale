@@ -52,3 +52,5 @@ export const getAllProducts = async () =>
   await axios.get(
     `${process.env.REACT_APP_API}/category/items?city=dehradun&category_name=all`
   );
+export const getPromocodes = async () =>
+  await axios.get(`${process.env.REACT_APP_API}/promos`);

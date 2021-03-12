@@ -8,6 +8,7 @@ import ProductCard from "../components/cards/ProductCard";
 import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import { getCartDetails, addToWishlist } from "../functions/customer";
+import { Modal } from "antd";
 
 const ProductDetails = ({ history }) => {
   const [loading, setLoading] = useState(false);
@@ -19,6 +20,19 @@ const ProductDetails = ({ history }) => {
   const [discountedPrice, setDiscountedPrice] = useState(0);
   const [price, setPrice] = useState(0);
   const [discount, setDiscount] = useState(0);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
 
   const { slug } = useParams();
 
@@ -43,7 +57,11 @@ const ProductDetails = ({ history }) => {
 
   const loadProducts = (c) => {
     setLoading(true);
-    getProductsByCategory(c)
+    getProductsByCategory(
+      c === "Wedding & Anniversary" || c === "Wedding & Anniversary "
+        ? "Wedding%20%26%20Anniversary%20"
+        : c
+    )
       .then((res) => {
         setLoading(false);
         if (res.data.success === "1") setProducts(res.data.Products);
@@ -237,6 +255,20 @@ const ProductDetails = ({ history }) => {
   };
   return (
     <>
+      <Modal
+        visible={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        centered
+        className="image-modal"
+      >
+        <img
+          src={
+            product.prof_img ? "https://cakewaale.com" + product.prof_img : ""
+          }
+          style={{ width: "100%" }}
+        />
+      </Modal>
       <h2 className="section-title">Cake Details</h2>
       <div className="container-fluid">
         <div className="row">
@@ -253,7 +285,8 @@ const ProductDetails = ({ history }) => {
                         : ""
                     }
                     alt="cake"
-                    className="product-detail-image"
+                    className="product-detail-image pointer"
+                    onClick={showModal}
                   />
                 </div>
               )}
@@ -268,7 +301,7 @@ const ProductDetails = ({ history }) => {
                   {product.product_name}
                   <div className="price-details">
                     <span className="discounted-price">
-                      ₹{discountedPrice}{" "}
+                      ₹{Math.round(discountedPrice)}{" "}
                     </span>
                     <span className="original-price">
                       {" "}
@@ -330,7 +363,7 @@ const ProductDetails = ({ history }) => {
         </div>
       </div>
       <hr />
-      <h2 className="section-title">Similar Products</h2>
+      <h2 className="section-title">View Similar Cakes</h2>
       <div className="container-fluid">
         <div className="row section-row">
           {loading ? (
@@ -341,7 +374,9 @@ const ProductDetails = ({ history }) => {
           ) : (
             products.length > 0 &&
             products
-              .filter((item, i) => i < 8)
+              .filter(
+                (item, i) => i < 8 && item.product_id !== product.product_id
+              )
               .map((item, i) => (
                 <div
                   className="col-6 col-md-4 col-lg-3 p-1 product-card-wrapper"

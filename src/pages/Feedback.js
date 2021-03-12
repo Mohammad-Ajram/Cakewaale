@@ -9,7 +9,7 @@ const Feedback = ({ history }) => {
   const { customer } = useSelector((state) => ({ ...state }));
 
   const placeholder =
-    "Please share your feedback! We would love to hear from you and we will try hard to work on your feedback.";
+    "Please share your feedback! We would love to hear from you and we will try our level best to work on your feedback.";
   const submitFeedback = (e) => {
     e.preventDefault();
     giveFeedback(description, customer.token)

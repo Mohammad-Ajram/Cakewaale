@@ -163,13 +163,20 @@ export const changeSuggestion = async (id, total, suggestion, token) =>
       },
     }
   );
-export const placeOrder = async (delivery_date, payment_method, range, token) =>
+export const placeOrder = async (
+  delivery_date,
+  payment_method,
+  range,
+  promo,
+  token
+) =>
   await axios.post(
     `${process.env.REACT_APP_API}/api/customer/order/new`,
     {
       delivery_date,
       payment_method,
-      range,
+      range: String(range),
+      promo: String(promo),
     },
     {
       headers: {
@@ -192,6 +199,16 @@ export const getPreviousOrders = async (token) =>
 export const cancelOrder = async (order_id, token) =>
   await axios.delete(
     `${process.env.REACT_APP_API}/api/customer/order/ongoing/cancel?order_id=${order_id}`,
+    {
+      headers: {
+        "x-customer-token": token,
+      },
+    }
+  );
+
+export const checkPromo = async (code, token) =>
+  await axios.get(
+    `${process.env.REACT_APP_API}/api/customer/promo/check?code=${code}`,
     {
       headers: {
         "x-customer-token": token,

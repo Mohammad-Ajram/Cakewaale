@@ -18,6 +18,7 @@ const PreviousOrders = ({ history }) => {
         .catch((err) => console.log(err));
     loadPreviousOrders();
   }, [customer.token]);
+  console.log(previousOrders);
 
   return (
     <>
@@ -27,26 +28,35 @@ const PreviousOrders = ({ history }) => {
           {previousOrders.length > 0 &&
             previousOrders.map((item) => (
               <div
-                className="col-md-8 mx-auto mb-5 p-3 order-card"
+                className="col-md-8 mx-auto col-10 mb-5 p-3 order-card"
                 key={item.order_id}
               >
-                <h5>Order Id : {item.order_id}</h5>
-                <h5>Order on: {item.order_date}</h5>
-                <h5>Delivered on: {item.delivery_date}</h5>
+                <h6>
+                  <b>Order Id</b> : {item.order_id}
+                </h6>
+                <h6>
+                  <b>Delivered on</b>: {item.complete_date}
+                </h6>
+                <h6>
+                  <b>Total Items({item.products.length})</b>
+                </h6>
                 <ol style={{ fontSize: "14px", fontWeight: "700" }}>
                   {item.products.map((i) => (
                     <li key={i.product_id} className="mb-2">
                       <img
                         src={"https://cakewaale.com" + i.prof_img}
+                        style={{ borderRadius: "5px" }}
                         width="100px"
                         height="80px"
                         alt="cake"
                       />
-                      {i.product_name}({i.weight} pounds) X {i.quantity}
+                      &nbsp;{i.product_name}({i.weight} pounds) X {i.quantity}
                     </li>
                   ))}
                 </ol>
-                <h5>Total Price : ₹{item.bill}</h5>
+                <h6>
+                  <strong>Total Bill : ₹{item.total_bill}</strong>
+                </h6>
               </div>
             ))}
         </div>

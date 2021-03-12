@@ -30,6 +30,7 @@ const Search = lazy(() => import("./pages/Search"));
 const ScrollToTop = lazy(() => import("./components/ScrollToTop"));
 const Topnav = lazy(() => import("./components/nav/Topnav"));
 const Footer = lazy(() => import("./components/nav/Footer"));
+const Promocode = lazy(() => import("./pages/Promocode"));
 
 function App() {
   const { customer } = useSelector((state) => ({ ...state }));
@@ -76,11 +77,13 @@ function App() {
     <div className="App">
       <Suspense
         fallback={
-          <div
-            className="p-5 m-5 text-center"
-            style={{ fontSize: "48px", color: "#cb202d" }}
-          >
-            <LoadingOutlined />
+          <div className="loading-container">
+            <div
+              className="loader"
+              style={{ fontSize: "48px", color: "#cb202d" }}
+            >
+              <LoadingOutlined />
+            </div>
           </div>
         }
       >
@@ -114,8 +117,10 @@ function App() {
             component={PreviousOrders}
           />
           <Route exact path="/search/:keyword" component={Search} />
+          <Route exact path="/promocode" component={Promocode} />
         </Switch>
         <Footer />
+        <div className="space"></div>
       </Suspense>
     </div>
   );
