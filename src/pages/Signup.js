@@ -91,7 +91,7 @@ const Signup = ({ history }) => {
     if (response.accessToken) {
       let intended = history.location.state;
       await axios
-        .post(`${process.env.REACT_APP_API}/api/customer/login/google`, {
+        .post(`${process.env.REACT_APP_API}/login/google`, {
           email: response.profileObj.email,
           name: response.profileObj.name,
         })

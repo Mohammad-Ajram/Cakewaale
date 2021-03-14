@@ -266,6 +266,7 @@ const ProductDetails = ({ history }) => {
           src={
             product.prof_img ? "https://cakewaale.com" + product.prof_img : ""
           }
+          alt="cake"
           style={{ width: "100%" }}
         />
       </Modal>

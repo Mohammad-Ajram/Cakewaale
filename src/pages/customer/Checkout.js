@@ -262,7 +262,6 @@ const Checkout = ({ history }) => {
   const minDate = `${new Date().getFullYear()}-${month}-${ndate}`;
 
   const applyCoupon = () => {
-    let found = false;
     checkPromo(promo, customer.token)
       .then((res) => {
         if (res.data.success === "1") {

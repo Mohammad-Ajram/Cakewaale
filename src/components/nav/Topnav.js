@@ -195,16 +195,19 @@ const Topnav = () => {
           </li>
           {customer && customer.token && (
             <>
-              <Link to="user/profile" onClick={() => setVisible(false)}>
+              <Link to="/user/profile" onClick={() => setVisible(false)}>
                 <li className="sidebar-link">My Profile</li>
               </Link>
-              <Link to="user/ongoing-orders" onClick={() => setVisible(false)}>
+              <Link to="/user/ongoing-orders" onClick={() => setVisible(false)}>
                 <li className="sidebar-link">Ongoing orders</li>
               </Link>
-              <Link to="user/previous-orders" onClick={() => setVisible(false)}>
+              <Link
+                to="/user/previous-orders"
+                onClick={() => setVisible(false)}
+              >
                 <li className="sidebar-link">Previous orders</li>
               </Link>
-              <Link to="user/wishlist" onClick={() => setVisible(false)}>
+              <Link to="/user/wishlist" onClick={() => setVisible(false)}>
                 <li className="sidebar-link">Wishlist</li>
               </Link>
               <Link to="/promocode" onClick={() => setVisible(false)}>
