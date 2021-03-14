@@ -58,49 +58,11 @@ const Login = ({ history }) => {
       .catch((err) => console.log(err));
   };
 
-  const handleGoogleLogin = async () => {
-    let intended = history.location.state;
-    await axios
-      .get("https://techjam1101.pythonanywhere.com/api/customer/login/google")
-      .then((res) => {
-        if (res.data.success === "1") {
-          getCartDetails(res.data.token)
-            .then((response) => {
-              if (res.data.success === "1") {
-                dispatch({
-                  type: "LOG_IN_CUSTOMER",
-                  payload: {
-                    name: res.data.name,
-                    token: res.data.token,
-                    cartItems: response.data.cart_items,
-                  },
-                });
-              }
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-          if (intended) history.push(intended.from);
-          else history.push("/");
-        } else {
-          if (res.data.message === "Customer not present") {
-            toast.error("There is no account signed up with this email.");
-            setEmail("");
-            setPassword("");
-          } else {
-            toast.error("Invalid password.");
-            setPassword("");
-          }
-        }
-      })
-      .catch((err) => console.log(err));
-  };
-
   const responseGoogle = async (response) => {
     if (response.accessToken) {
       let intended = history.location.state;
       await axios
-        .post(`${process.env.REACT_APP_API}/api/customer/login/google`, {
+        .post(`${process.env.REACT_APP_API}/login/google`, {
           email: response.profileObj.email,
           name: response.profileObj.name,
         })
