@@ -248,12 +248,7 @@ const Topnav = () => {
             <>
               <br />
               <br />
-              <button
-                onClick={handleLogout}
-                className="btn my-btn-primary btn-block"
-              >
-                Logout
-              </button>
+              <button className="btn my-btn-primary btn-block">Logout</button>
             </>
           )}
         </ul>

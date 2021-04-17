@@ -76,7 +76,7 @@ const Footer = () => {
         <div className="row">
           <div className="col-md-8 col-sm-6 col-xs-12">
             <p className="copyright-text">
-              Copyright &copy; 2021 All Rights Reserved by
+              Copyright &copy; {new Date().getFullYear()} All Rights Reserved by
               <Link to="/"> Cakewaale.com</Link>.
             </p>
           </div>

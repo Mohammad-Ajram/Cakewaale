@@ -7,6 +7,7 @@ import {
   removeWishlistItem,
 } from "../../functions/customer";
 import { useSelector, useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 const ProductCard = ({
   name,
@@ -41,49 +42,53 @@ const ProductCard = ({
 
   const addItemToWishlist = (e) => {
     e.stopPropagation();
+    if (customer && customer.token) {
+      addToWishlist(id, weight, customer.token)
+        .then((res) => {
+          if (res.data.success === "1") {
+            // toast.success("Item added to wishlist");
+            getWishlist(customer.token).then((res) => {
+              if (res.data.success === "1") {
+                dispatch({
+                  type: "GET_WISHLIST",
+                  payload: { ...customer, wishlist: res.data.fav_items },
+                });
+              } else {
+                dispatch({
+                  type: "GET_WISHLIST",
+                  payload: { ...customer, wishlist: undefined },
+                });
+              }
+            });
+          } else if (
+            res.data.success === "0" &&
+            res.data.message === "item already in favourites"
+          ) {
+            // toast.info("Item removed from wishlist");
 
-    addToWishlist(id, weight, customer.token)
-      .then((res) => {
-        if (res.data.success === "1") {
-          // toast.success("Item added to wishlist");
-          getWishlist(customer.token).then((res) => {
-            if (res.data.success === "1") {
-              dispatch({
-                type: "GET_WISHLIST",
-                payload: { ...customer, wishlist: res.data.fav_items },
-              });
-            } else {
-              dispatch({
-                type: "GET_WISHLIST",
-                payload: { ...customer, wishlist: undefined },
-              });
-            }
-          });
-        } else if (
-          res.data.success === "0" &&
-          res.data.message === "item already in favourites"
-        ) {
-          // toast.info("Item removed from wishlist");
-
-          removeWishlistItem(id, customer.token).then((res) => {
-            if (res.data.success === "1")
-              getWishlist(customer.token).then((res) => {
-                if (res.data.success === "1") {
-                  dispatch({
-                    type: "GET_WISHLIST",
-                    payload: { ...customer, wishlist: res.data.fav_items },
-                  });
-                } else {
-                  dispatch({
-                    type: "GET_WISHLIST",
-                    payload: { ...customer, wishlist: undefined },
-                  });
-                }
-              });
-          });
-        }
-      })
-      .catch((err) => console.log(err));
+            removeWishlistItem(id, customer.token).then((res) => {
+              if (res.data.success === "1")
+                getWishlist(customer.token).then((res) => {
+                  if (res.data.success === "1") {
+                    dispatch({
+                      type: "GET_WISHLIST",
+                      payload: { ...customer, wishlist: res.data.fav_items },
+                    });
+                  } else {
+                    dispatch({
+                      type: "GET_WISHLIST",
+                      payload: { ...customer, wishlist: undefined },
+                    });
+                  }
+                });
+            });
+          }
+        })
+        .catch((err) => console.log(err));
+    } else {
+      toast.error("Please Login to add items to your wishlist!");
+      history.push("/login");
+    }
   };
 
   return (

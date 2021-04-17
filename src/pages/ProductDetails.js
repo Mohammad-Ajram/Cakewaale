@@ -242,16 +242,21 @@ const ProductDetails = ({ history }) => {
   };
 
   const addItemToWishlist = () => {
-    addToWishlist(product.product_id, weight, customer.token)
-      .then((res) => {
-        if (res.data.success === "1") toast.success("Item added to wishlist");
-        else if (
-          res.data.success === "0" &&
-          res.data.message === "item already in favourites"
-        )
-          toast.info("Item already in wishlist");
-      })
-      .catch((err) => console.log(err));
+    if (customer && customer.token) {
+      addToWishlist(product.product_id, weight, customer.token)
+        .then((res) => {
+          if (res.data.success === "1") toast.success("Item added to wishlist");
+          else if (
+            res.data.success === "0" &&
+            res.data.message === "item already in favourites"
+          )
+            toast.info("Item already in wishlist");
+        })
+        .catch((err) => console.log(err));
+    } else {
+      toast.error("Please Login to add items to your wishlist!");
+      history.push("/login");
+    }
   };
   return (
     <>

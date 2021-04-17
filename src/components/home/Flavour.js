@@ -8,6 +8,7 @@ const Flavour = () => {
   const [flavour, setFlavour] = useState("chocolate");
   const [products, setProducts] = useState([45]);
   const [loading, setLoading] = useState(false);
+  const [limit, setLimit] = useState(6);
 
   const loadProducts = (f) => {
     setLoading(true);
@@ -43,6 +44,10 @@ const Flavour = () => {
     setFlavour(e.target.value);
     loadProducts(e.target.value);
   };
+  const viewAll = () => {
+    if (limit !== products.length) setLimit(products.length);
+    else setLimit(6);
+  };
   return (
     <>
       <h2 className="section-title mb-0">Cakes By Flavour</h2>
@@ -70,7 +75,7 @@ const Flavour = () => {
           ) : (
             products.length > 0 &&
             products
-              .filter((item, i) => i < 6)
+              .filter((item, i) => i < limit)
               .map((item, i) => (
                 <div
                   className="col-6 col-md-4 col-lg-3 p-1 product-card-wrapper"
@@ -89,6 +94,9 @@ const Flavour = () => {
               ))
           )}
         </div>
+        <span className="float-right view-more pointer" onClick={viewAll}>
+          {limit === products.length ? "View less" : "View More"}
+        </span>
       </div>
     </>
   );

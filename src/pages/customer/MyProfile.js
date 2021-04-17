@@ -9,8 +9,8 @@ const MyProfile = ({ history }) => {
   const [email, setEmail] = useState("");
   const [contactOne, setContactOne] = useState("");
   const [contactTwo, setContactTwo] = useState("");
-  const [hNo, setHNo] = useState("");
-  const [landmark, setLandmark] = useState("");
+  const [hNo, setHNo] = useState("0");
+  const [landmark, setLandmark] = useState("null");
   const [locality, setLocality] = useState("");
   const [city, setCity] = useState("dehradun");
   const [state, setState] = useState("uttarakhand");
@@ -148,6 +148,7 @@ const MyProfile = ({ history }) => {
       })
       .catch((err) => console.log(err));
   };
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -207,68 +208,71 @@ const MyProfile = ({ history }) => {
           </button>
           <br />
           <hr />
-          <h4>Delivery Address</h4>
-          <label>House No.</label>
-          <br />
-          <input
-            type="number"
-            value={hNo}
-            onChange={(e) => setHNo(e.target.value)}
-            className="form-control"
-          ></input>
-          <br />
-          <label>Landmark</label>
-          <br />
-          <input
-            type="text"
-            value={landmark}
-            onChange={(e) => setLandmark(e.target.value)}
-            className="form-control"
-          ></input>
-          <br />
-          <label>Locality</label>
-          <br />
-          <input
-            type="text"
-            value={locality}
-            onChange={(e) => setLocality(e.target.value)}
-            className="form-control"
-          ></input>
-          <br />
-          <label>City</label>
-          <select
-            className="form-control"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-          >
-            <option value="dehradun">Dehradun</option>
-          </select>
-          <br />
-          <label>State</label>
-          <select
-            className="form-control"
-            value={state}
-            onChange={(e) => setState(e.target.value)}
-          >
-            <option value="uttarakhand">Uttarakhand</option>
-          </select>
-          <br />
-          <label>Pincode</label>
-          <br />
-          <input
-            type="number"
-            value={pincode}
-            onChange={(e) => setPincode(e.target.value)}
-            className="form-control"
-          ></input>
-          <br />
+          <form onSubmit={changeAddress}>
+            <h4>Delivery Address</h4>
+            {/* <label>House No.</label>
+            <br />
+            <input
+              type="number"
+              value={hNo}
+              onChange={(e) => setHNo(e.target.value)}
+              className="form-control"
+              required
+            ></input>
+            <br />
+            <label>Landmark</label>
+            <br />
+            <input
+              type="text"
+              value={landmark}
+              onChange={(e) => setLandmark(e.target.value)}
+              className="form-control"
+              required
+            ></input>
+            <br /> */}
+            <label>Address</label>
+            <br />
+            <input
+              type="text"
+              value={locality}
+              onChange={(e) => setLocality(e.target.value)}
+              className="form-control"
+              required
+            ></input>
+            <br />
+            <label>City</label>
+            <select
+              className="form-control"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+            >
+              <option value="dehradun">Dehradun</option>
+            </select>
+            <br />
+            <label>State</label>
+            <select
+              className="form-control"
+              value={state}
+              onChange={(e) => setState(e.target.value)}
+            >
+              <option value="uttarakhand">Uttarakhand</option>
+            </select>
+            <br />
+            <label>Pincode</label>
+            <br />
+            <input
+              type="number"
+              value={pincode}
+              onChange={(e) => setPincode(e.target.value)}
+              className="form-control"
+              required
+            ></input>
+            <br />
 
-          <button
-            className="btn my-btn-primary btn-block"
-            onClick={changeAddress}
-          >
-            Change Address
-          </button>
+            <button className="btn my-btn-primary btn-block">
+              Change Address
+            </button>
+          </form>
         </div>
       </div>
     </div>

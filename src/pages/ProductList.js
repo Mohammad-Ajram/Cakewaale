@@ -4,7 +4,7 @@ import { getProductsByCategory } from "../functions/index";
 import ProductCard from "../components/cards/ProductCard";
 import LoadingCard from "../components/cards/LoadingCard";
 
-const ProductList = () => {
+const ProductList = ({ history }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -29,9 +29,44 @@ const ProductList = () => {
     loadProducts();
   }, [slug]);
 
+  const sort = async (e) => {
+    if (e.target.value === "1") {
+      let p = products;
+      p.sort(function (a, b) {
+        return b.discounted_price - a.discounted_price;
+      });
+
+      setProducts(p);
+
+      history.push("/product-list/" + slug);
+    } else if (e.target.value === "0") {
+      let p = products;
+      p.sort(function (a, b) {
+        return a.discounted_price - b.discounted_price;
+      });
+
+      setProducts(p);
+
+      history.push("/product-list/" + slug);
+    }
+  };
+
   return (
     <>
       <h2 className="section-title">Cakes List</h2>
+      <div className="form-group">
+        <label className="ml-4 pl-2" id="label-for-flavour">
+          Sort by price
+        </label>
+        <select
+          className="form-control col-md-4 col-sm-10 flavour-select"
+          onChange={sort}
+        >
+          <option hidden>None</option>
+          <option value={"0"}>Low to High</option>
+          <option value={"1"}>High to Low</option>
+        </select>
+      </div>
       <div className="container-fluid">
         <div className="row section-row">
           {loading ? (

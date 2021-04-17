@@ -113,7 +113,11 @@ const Signup = ({ history }) => {
               .catch((err) => {
                 console.log(err);
               });
-            if (intended) history.push(intended.from);
+            if (intended)
+              history.push({
+                pathname: "/signup/complete",
+                state: { from: intended.from },
+              });
             else history.push("/");
           }
         })

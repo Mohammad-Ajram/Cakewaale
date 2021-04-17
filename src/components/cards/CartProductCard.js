@@ -414,7 +414,7 @@ const CartProductCard = ({
           <label>
             <label className="cart-label">Cake Type</label>
             <br />
-            Eggless
+            <span className="cart-label">Eggless &nbsp;</span>
             <label className="switch">
               <input
                 type="checkbox"
@@ -424,7 +424,7 @@ const CartProductCard = ({
               />
               <span className="slider round"></span>
             </label>
-            Egg
+            <span className="cart-label">&nbsp;&nbsp;Egg</span>
           </label>
           <br />
           <label className="cart-label">Quantity</label>{" "}
@@ -436,13 +436,9 @@ const CartProductCard = ({
             <i className="fa fa-plus"></i>
           </button>
           <span className="">
-            <span className="space">
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             {qty}
-            <span className="space">
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           </span>
           <button
             className="pointer small-plus-icon"
