@@ -14,6 +14,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
 const Signup = lazy(() => import("./pages/Signup"));
+const GoogleSignupComplete = lazy(() => import("./pages/GoogleSignupComplete"));
 const Faq = lazy(() => import("./pages/Faq"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const About = lazy(() => import("./pages/About"));
@@ -35,6 +36,7 @@ const Promocode = lazy(() => import("./pages/Promocode"));
 function App() {
   const { customer } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
+
   useEffect(() => {
     if (customer) {
       const loadCartItemss = () =>
@@ -88,6 +90,7 @@ function App() {
         }
       >
         <ToastContainer />
+
         <ScrollToTop />
         <header className="App-header">
           <Topnav />
@@ -96,6 +99,11 @@ function App() {
           <Route exact path="/" component={Home} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/signup" component={Signup} />
+          <Route
+            exact
+            path="/signup/complete"
+            component={GoogleSignupComplete}
+          />
           <Route exact path="/about" component={About} />
           <Route exact path="/privacy-policy" component={PrivacyPolicy} />
           <Route exact path="/faq" component={Faq} />

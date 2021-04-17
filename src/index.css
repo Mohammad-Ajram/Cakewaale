@@ -81,7 +81,18 @@ body {
     object-fit: contain;
   }
 }
+/*Remove arroes from input type num*/
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
 /*----Designing Home Page Sections-----*/
 .section {
   margin-bottom: 40px;
@@ -225,12 +236,14 @@ body {
   }
   .discounted-price {
     font-size: 12px;
+    margin-right: 5px;
   }
   .original-price {
     font-size: 10px;
   }
   .discount {
     font-size: 10px;
+    padding: 0px;
   }
 }
 @media screen and (max-width: 400px) {
@@ -401,7 +414,7 @@ body {
 .cart-image {
   width: 100%;
   height: 150px;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 5px;
 }
 .cart-product-card {
@@ -999,7 +1012,7 @@ input:checked + .slider:before {
   min-width: 150px;
   left: -40%;
   display: none;
-  z-index: 100;
+  z-index: 2;
   background-color: white;
 }
 .dropbtn {
@@ -1170,4 +1183,12 @@ input:checked + .slider:before {
 }
 .ant-modal-body {
   padding: 0px;
+}
+html,
+body,
+#map {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
 }

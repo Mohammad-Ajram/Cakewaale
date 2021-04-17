@@ -6,12 +6,14 @@ import { getCartDetails } from "../../functions/customer";
 import EmptyCart from "../../images/empty_cart.png";
 import { getFlavours } from "../../functions/index";
 import { useDispatch } from "react-redux";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const Cart = ({ history }) => {
   const [cartItems, setCartItems] = useState([]);
   const [subTotal, setSubTotal] = useState(0);
   const [cartTotal, setCartTotal] = useState(0);
   const [flavours, setFlavours] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const { customer } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
@@ -41,7 +43,11 @@ const Cart = ({ history }) => {
                 type: "GET_CART",
                 payload: { ...customer, cartItems: res.data.cart_items },
               });
-            } else setCartItems([]);
+              setLoading(false);
+            } else {
+              setCartItems([]);
+              setLoading(false);
+            }
           })
           .catch((err) => console.log(err));
       }
@@ -82,8 +88,20 @@ const Cart = ({ history }) => {
 
   return (
     <>
-      <h2 className="section-title">My Cart ({cartItems.length} items)</h2>
-      {cartItems && !(cartItems.length > 0) && (
+      {loading && (
+        <div className="loading-container">
+          <div
+            className="loader"
+            style={{ fontSize: "48px", color: "#cb202d" }}
+          >
+            <LoadingOutlined />
+          </div>
+        </div>
+      )}
+      {!loading && (
+        <h2 className="section-title">My Cart ({cartItems.length} items)</h2>
+      )}
+      {!loading && cartItems && !(cartItems.length > 0) && (
         <div
           className="container-fluid"
           style={{
@@ -94,11 +112,18 @@ const Cart = ({ history }) => {
             padding: "0 50px 0 50px",
           }}
         >
-          <img src={EmptyCart} style={{ width: "50%" }} alt="empty cart" />
-          <h4 className="text-center">Oops! Your Cart is empty</h4>
+          <img
+            src={EmptyCart}
+            style={{ width: "100%", height: "200px", objectFit: "contain" }}
+            alt="empty cart"
+          />
+          <br />
+          <h4 className="text-center" style={{ color: "grey" }}>
+            Oops! Your Cart is empty
+          </h4>
         </div>
       )}
-      {customer && customer.cartItems && (
+      {!loading && customer && customer.cartItems && (
         <div className="container-fluid">
           <div className="row">
             <div className="col-md-8 ">

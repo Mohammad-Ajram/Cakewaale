@@ -215,3 +215,8 @@ export const checkPromo = async (code, token) =>
       },
     }
   );
+
+export const calcDist = async (place_id) =>
+  await axios.post(`${process.env.REACT_APP_API}/api/customer/get/distance`, {
+    place_id,
+  });

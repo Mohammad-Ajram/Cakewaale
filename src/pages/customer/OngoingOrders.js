@@ -27,11 +27,15 @@ const OngoingOrders = ({ history }) => {
     loadOngoingOrderss();
   }, [customer.token]);
 
-  const cancelOngoingOrder = (order_id) => {
+  const cancelOngoingOrder = (order_id, online_status) => {
     cancelOrder(order_id, customer.token).then((res) => {
       if (res.data.success === "1") {
         loadOngoingOrders();
-        toast.error("Order Cancelled");
+        if (online_status === "0") toast.error("Order Cancelled");
+        else
+          toast.error(
+            "Order Cancelled. Your payment will be refunded within 24 hrs. If payment doesn't get refunded within 24 hrs then contact us at +91-7017554779"
+          );
       }
     });
   };
@@ -77,7 +81,9 @@ const OngoingOrders = ({ history }) => {
                 </h6>
                 <button
                   className="btn my-btn-primary btn-block"
-                  onClick={() => cancelOngoingOrder(item.order_id)}
+                  onClick={() =>
+                    cancelOngoingOrder(item.order_id, item.online_status)
+                  }
                 >
                   Cancel Order
                 </button>

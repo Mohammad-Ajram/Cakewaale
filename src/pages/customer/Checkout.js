@@ -12,6 +12,7 @@ import logo from "../../images/logo.png";
 import { useDispatch } from "react-redux";
 import { Modal } from "antd";
 import { checkPromo } from "../../functions/customer";
+import Map from "../../components/Map";
 
 const Checkout = ({ history }) => {
   const [hNo, setHNo] = useState("");
@@ -33,8 +34,8 @@ const Checkout = ({ history }) => {
   const [products, setProducts] = useState([]);
   const [range, setRange] = useState("0");
 
-  const [city, setCity] = useState("dehradun");
-  const [state, setState] = useState("uttarakhand");
+  const [city, setCity] = useState("Dehradun");
+  const [state, setState] = useState("Uttarakhand");
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -195,6 +196,8 @@ const Checkout = ({ history }) => {
       toast.error("Please select delivery time and date");
     else if ((paymentMethod === "0" || paymentMethod === "1") && range === "0")
       toast.error("Please select range");
+    else if (!hNo || !locality || !landmark || !pincode)
+      toast.error("Please add your delivery address");
     else
       placeOrder(
         deliveryDate + " " + deliveryTime + ":00",
@@ -220,21 +223,28 @@ const Checkout = ({ history }) => {
         .catch((err) => console.log(err));
   };
 
-  const changeAddress = async (e) => {
-    e.preventDefault();
-    console.log("address");
-    setIsModalVisible(false);
+  const changeAddress = async (
+    address,
+    area,
+    city,
+    state,
+    pincode,
+    lat,
+    lon
+  ) => {
     await axios
       .put(
         `${process.env.REACT_APP_API}/api/customer/profile/update`,
         {
           address: "delivery",
-          houseNo: hNo,
-          locality,
-          landmark,
+          houseNo: "0",
+          locality: address,
+          landmark: area,
           city,
           state,
           pincode,
+          lat,
+          lon,
         },
         {
           headers: {
@@ -242,7 +252,9 @@ const Checkout = ({ history }) => {
           },
         }
       )
-      .then((res) => toast.success("Address Changed"))
+      .then((res) => {
+        if (res.data.success === "1") console.log("Address Changed");
+      })
       .catch((err) => console.log(err));
   };
 
@@ -379,31 +391,6 @@ const Checkout = ({ history }) => {
       <div className="conatiner-fluid">
         <div className="row" style={{ width: "100%" }}>
           <div className="col-md-8 px-5">
-            <label className="checkout-label">Deliver to this address</label>
-            <textarea
-              disabled
-              className="form-control"
-              style={{ resize: "none", height: "100px", width: "90%" }}
-              value={
-                hNo +
-                ", " +
-                locality +
-                ", " +
-                "Near " +
-                landmark +
-                "\n " +
-                "Dehradun, Uttarakhand -" +
-                pincode
-              }
-            ></textarea>
-            <br />
-            <button className="btn my-btn-primary" onClick={showModal}>
-              Update Address
-            </button>
-            {/* <button className="btn my-btn-secondary ml-1">
-              Update Address
-            </button> */}
-            <br />
             <label className="checkout-label">Select payment options</label>
             <br />
             <input
@@ -451,6 +438,48 @@ const Checkout = ({ history }) => {
             />
             &nbsp;Pay online and pick myself
             <br />
+            <br />
+            {/*{" "}
+                <textarea
+                  disabled
+                  className="form-control"
+                  style={{ resize: "none", height: "100px", width: "90%" }}
+                  value={
+                    !hNo || !locality || !landmark || !pincode
+                      ? ""
+                      : hNo +
+                        ", " +
+                        locality +
+                        ", " +
+                        "Near " +
+                        landmark +
+                        "\n " +
+                        "Dehradun, Uttarakhand -" +
+                        pincode
+                  }
+                ></textarea>
+                <br />
+                <button className="btn my-btn-primary" onClick={showModal}>
+                  Update Address
+                </button>{" "}
+                */}
+            {(paymentMethod === "0" || paymentMethod === "1") && (
+              <>
+                <label className="checkout-label">
+                  Mark your delivery location on map
+                </label>
+
+                <Map
+                  center={{ lat: 30.353050987984094, lng: 78.02502274032297 }}
+                  height="300px"
+                  zoom={15}
+                  setRange={setRange}
+                  changeAddress={changeAddress}
+                />
+                <br />
+                <br />
+              </>
+            )}
             {/* <label className="checkout-label">Have promocode?</label>
             <br />
             <input type="text" className="form-control" />
@@ -462,13 +491,14 @@ const Checkout = ({ history }) => {
               className="form-control"
               onChange={(e) => setDeliveryDate(e.target.value)}
             />
+            <br />
             <label className="checkout-label">Select delivery time</label>
             <input
               type="time"
               className="form-control"
               onChange={(e) => setDeliveryTime(e.target.value)}
             />
-            {(paymentMethod === "0" || paymentMethod === "1") && (
+            {/* {(paymentMethod === "0" || paymentMethod === "1") && (
               <>
                 <p className="budget checkout-label">
                   Select your expected distance from Ballupur Chowk
@@ -488,7 +518,8 @@ const Checkout = ({ history }) => {
                   </p>
                 </div>
               </>
-            )}
+            )} */}
+            <br />
             <label className="checkout-label">Have Promocode?</label>
             <input
               type="text"
@@ -516,6 +547,14 @@ const Checkout = ({ history }) => {
               <span className="float-right checkout-label">
                 <strong>₹{range * 10}</strong>
               </span>
+              <br />
+              {range !== "0" && (
+                <span className="checkout-label">
+                  <small>
+                    Your approximate distance from our store is {range} kms
+                  </small>
+                </span>
+              )}
             </div>
             <br />
             <div style={{ width: "100%" }}>

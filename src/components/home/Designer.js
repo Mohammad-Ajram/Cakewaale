@@ -6,6 +6,7 @@ import LoadingCard from "../cards/LoadingCard";
 const Designer = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [limit, setLimit] = useState(6);
 
   const loadProducts = () => {
     setLoading(true);
@@ -23,6 +24,11 @@ const Designer = () => {
     loadProducts();
   }, []);
 
+  const viewAll = () => {
+    if (limit !== products.length) setLimit(products.length);
+    else setLimit(6);
+  };
+
   return (
     <>
       <h2 className="section-title">Designer Cakes</h2>
@@ -35,24 +41,29 @@ const Designer = () => {
             />
           ) : (
             products.length > 0 &&
-            products.map((item, i) => (
-              <div
-                className="col-6 col-md-4 col-lg-3 p-1 product-card-wrapper"
-                key={i}
-              >
-                <ProductCard
-                  name={item.product_name}
-                  img={item.prof_img}
-                  id={item.product_id}
-                  discountedPrice={item.discounted_price}
-                  discount={item.offer}
-                  price={item.price}
-                  weight={item.weight}
-                />
-              </div>
-            ))
+            products
+              .filter((item, i) => i < limit)
+              .map((item, i) => (
+                <div
+                  className="col-6 col-md-4 col-lg-3 p-1 product-card-wrapper"
+                  key={i}
+                >
+                  <ProductCard
+                    name={item.product_name}
+                    img={item.prof_img}
+                    id={item.product_id}
+                    discountedPrice={item.discounted_price}
+                    discount={item.offer}
+                    price={item.price}
+                    weight={item.weight}
+                  />
+                </div>
+              ))
           )}
         </div>
+        <span className="float-right view-more pointer" onClick={viewAll}>
+          {limit === products.length ? "View less" : "View More"}
+        </span>
       </div>
     </>
   );
