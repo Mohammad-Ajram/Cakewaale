@@ -53,7 +53,7 @@ const Home = ({ history }) => {
   };
 
   const placeholder =
-    "Please share your cake description in details, also upload the picture what kind of you want.\nNote : You can search for cake on google and we will make it for you.";
+    "Please share your cake description in details, also upload the picture of what kind of cake you want.\nNote : You can search for cake on google and we will make it for you.";
 
   const placeCustomisedOrder = (e) => {
     e.preventDefault();
