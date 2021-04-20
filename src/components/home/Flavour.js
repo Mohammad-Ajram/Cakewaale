@@ -8,7 +8,9 @@ const Flavour = () => {
   const [flavour, setFlavour] = useState("chocolate");
   const [products, setProducts] = useState([45]);
   const [loading, setLoading] = useState(false);
-  const [limit, setLimit] = useState(6);
+  const [limit, setLimit] = useState(
+    window.screen.width > 992 ? 8 : window.screen.width > 400 ? 6 : 4
+  );
 
   const loadProducts = (f) => {
     setLoading(true);
@@ -46,11 +48,15 @@ const Flavour = () => {
   };
   const viewAll = () => {
     if (limit !== products.length) setLimit(products.length);
-    else setLimit(6);
+    else
+      setLimit(
+        window.screen.width > 992 ? 8 : window.screen.width > 400 ? 6 : 4
+      );
   };
   return (
     <>
       <h2 className="section-title mb-0">Cakes By Flavour</h2>
+      <br />
       <label id="label-for-flavour" className="">
         Choose Flavour
       </label>
@@ -69,7 +75,13 @@ const Flavour = () => {
         <div className="row section-row">
           {loading ? (
             <LoadingCard
-              count={6}
+              count={
+                window.screen.width > 992
+                  ? 8
+                  : window.screen.width > 400
+                  ? 6
+                  : 4
+              }
               classValue="col-6 col-md-4 col-lg-3 p-1 product-card-wrapper"
             />
           ) : (

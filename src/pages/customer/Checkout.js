@@ -1,6 +1,6 @@
 import CheckoutProductCard from "../../components/cards/CheckoutProductCard";
 import { useSelector } from "react-redux";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   getProfile,
   placeOrder,
@@ -38,9 +38,7 @@ const Checkout = ({ history }) => {
   const [city, setCity] = useState("Dehradun");
   const [state, setState] = useState("Uttarakhand");
 
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
+  const input1 = useRef(null);
 
   const handleOk = () => {
     setIsModalVisible(false);
@@ -167,7 +165,7 @@ const Checkout = ({ history }) => {
         address: "Cakewaale Corporate Office",
       },
       theme: {
-        color: "#61dafb",
+        color: "#cb202d",
       },
     };
 
@@ -203,6 +201,8 @@ const Checkout = ({ history }) => {
     )
       toast.error("Please mark your delivery location on map");
     else if (contact.length !== 10) setIsContactModalVisible(true);
+    else if (city.toLowerCase() !== "dehradun")
+      toast.error("We are delivering only in Dehradun right now.");
     else
       placeOrder(
         deliveryDate + " " + deliveryTime + ":00",
@@ -265,11 +265,12 @@ const Checkout = ({ history }) => {
 
   const changeContact = async (e) => {
     e.preventDefault();
+
     await axios
       .put(
         `${process.env.REACT_APP_API}/api/customer/profile/update`,
         {
-          contact_one: contact,
+          contact_one: input1.current.value,
         },
         {
           headers: {
@@ -394,12 +395,16 @@ const Checkout = ({ history }) => {
       >
         <div className="px-4 pb-2">
           <label>Enter your contact number</label>
-          <input
-            type="number"
-            className="form-control"
-            value={contact}
-            onChange={(e) => setContact(e.target.value)}
-          />
+          <div class="input-group prefix">
+            <span class="input-group-addon ">+91</span>
+            <input
+              type="number"
+              ref={input1}
+              className="form-control"
+              style={{ width: "100%" }}
+              defaultValue={contact}
+            />
+          </div>
           <br />
           <button
             className="btn my-btn-primary btn-block"
@@ -534,6 +539,7 @@ const Checkout = ({ history }) => {
                   zoom={15}
                   setRange={setRange}
                   changeAddress={changeAddress}
+                  setCity={setCity}
                 />
                 <br />
                 <br />

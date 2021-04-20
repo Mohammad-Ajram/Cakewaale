@@ -25,9 +25,10 @@ body {
 }
 .cake-image {
   position: absolute;
-
-  right: 0px;
-  bottom: 0px;
+  height: 400px;
+  width: 400px;
+  right: 20px;
+  bottom: -40px;
 }
 .ap {
   position: absolute;
@@ -300,11 +301,12 @@ input[type="number"] {
   width: 170px;
 }
 #label-for-flavour {
-  color: #323232;
-  font-weight: 700;
-  letter-spacing: 0.2em;
+  font-family: "Lato", sans-serif;
+  color: #555555;
+  font-weight: 300;
   font-size: 16px;
   margin-left: 30px;
+  margin-bottom: 0px;
 }
 
 /* -----------Designing Product Details Page----------*/
@@ -1212,4 +1214,34 @@ body,
 }
 .location-btn {
   box-shadow: 0 0 5px grey;
+}
+.input-group-addon {
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+  color: #555;
+  text-align: center;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  width: 1%;
+  white-space: nowrap;
+  vertical-align: middle;
+  display: table-cell;
+}
+.prefix input {
+  border-radius: 0px 4px 4px 0px;
+}
+.prefix .input-group-addon {
+  border-right: 0;
+  border-radius: 4px 0px 0px 4px;
+}
+.input-group-addon.prefix {
+  border-radius: 4px 0px 0px 4px;
+  border-right: 0;
+}
+.input-group {
+  position: relative;
+  display: table;
+  border-collapse: separate;
 }
