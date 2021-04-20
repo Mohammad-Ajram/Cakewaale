@@ -89,6 +89,12 @@ const OngoingOrders = ({ history }) => {
                 </button>
               </div>
             ))}
+          {ongoingOrders.length === 0 && (
+            <div className="mb-5 ml-3 pb-5">
+              {" "}
+              <h3 className="text-center">There are no ongoing orders.</h3>
+            </div>
+          )}
         </div>
       </div>
     </>

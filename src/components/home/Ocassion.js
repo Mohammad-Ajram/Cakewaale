@@ -5,7 +5,9 @@ import LoadingCard from "../cards/LoadingCard";
 
 const Ocassion = () => {
   const [categories, setcategories] = useState([]);
-  const [limit, setLimit] = useState(6);
+  const [limit, setLimit] = useState(
+    window.screen.width > 992 ? 8 : window.screen.width > 400 ? 6 : 4
+  );
   const [loading, setLoading] = useState(false);
 
   const loadCategories = () => {
@@ -26,7 +28,10 @@ const Ocassion = () => {
 
   const viewAll = () => {
     if (limit !== categories.length) setLimit(categories.length);
-    else setLimit(6);
+    else
+      setLimit(
+        window.screen.width > 992 ? 8 : window.screen.width > 400 ? 6 : 4
+      );
   };
   return (
     <>
@@ -43,7 +48,16 @@ const Ocassion = () => {
                 </div>
               ))
           ) : (
-            <LoadingCard count={6} classValue="col-6 col-md-4 col-lg-3 p-1" />
+            <LoadingCard
+              count={
+                window.screen.width > 992
+                  ? 8
+                  : window.screen.width > 400
+                  ? 6
+                  : 4
+              }
+              classValue="col-6 col-md-4 col-lg-3 p-1"
+            />
           )}
         </div>
         <span className="float-right view-more pointer" onClick={viewAll}>

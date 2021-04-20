@@ -54,19 +54,21 @@ const ProductList = ({ history }) => {
   return (
     <>
       <h2 className="section-title">Cakes List</h2>
-      <div className="form-group">
-        <label className="ml-4 pl-2" id="label-for-flavour">
-          Sort by price
-        </label>
-        <select
-          className="form-control col-md-4 col-sm-10 flavour-select"
-          onChange={sort}
-        >
-          <option hidden>None</option>
-          <option value={"0"}>Low to High</option>
-          <option value={"1"}>High to Low</option>
-        </select>
-      </div>
+      {products.length !== 0 && (
+        <div className="form-group">
+          <label className="ml-4 pl-2" id="label-for-flavour">
+            Sort by price
+          </label>
+          <select
+            className="form-control col-md-4 col-sm-10 flavour-select"
+            onChange={sort}
+          >
+            <option hidden>None</option>
+            <option value={"0"}>Low to High</option>
+            <option value={"1"}>High to Low</option>
+          </select>
+        </div>
+      )}
       <div className="container-fluid">
         <div className="row section-row">
           {loading ? (
@@ -74,7 +76,7 @@ const ProductList = ({ history }) => {
               count={8}
               classValue="col-6 col-md-4 col-lg-3 p-1 product-card-wrapper"
             />
-          ) : (
+          ) : products.length !== 0 ? (
             products.length > 0 &&
             products.map((item, i) => (
               <div
@@ -92,6 +94,8 @@ const ProductList = ({ history }) => {
                 />
               </div>
             ))
+          ) : (
+            <h3>Cakes will be added soon in this category</h3>
           )}
         </div>
       </div>

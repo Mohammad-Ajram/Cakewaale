@@ -5,7 +5,9 @@ import LoadingCard from "../cards/LoadingCard";
 
 const Offer = () => {
   const [products, setProducts] = useState([]);
-  const [limit, setLimit] = useState(4);
+  const [limit, setLimit] = useState(
+    window.screen.width > 992 ? 8 : window.screen.width > 400 ? 6 : 4
+  );
   const [loading, setLoading] = useState(false);
 
   const loadProducts = () => {
@@ -26,16 +28,25 @@ const Offer = () => {
 
   const viewAll = () => {
     if (limit !== products.length) setLimit(products.length);
-    else setLimit(4);
+    else
+      setLimit(
+        window.screen.width > 992 ? 8 : window.screen.width > 400 ? 6 : 4
+      );
   };
   return (
     <>
-      <h2 className="section-title">Cakes By Offer</h2>
+      <h2 className="section-title">Cakes On Offer</h2>
       <div className="container-fluid">
         <div className="row section-row">
           {loading ? (
             <LoadingCard
-              count={4}
+              count={
+                window.screen.width > 992
+                  ? 8
+                  : window.screen.width > 400
+                  ? 6
+                  : 4
+              }
               classValue="col-6 col-md-4 col-lg-3 p-1 product-card-wrapper"
             />
           ) : (

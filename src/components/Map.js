@@ -11,6 +11,7 @@ import { GoogleMapsAPI } from "../client-config";
 import Autocomplete from "react-google-autocomplete";
 import { calcDist } from "../functions/customer";
 import Location from "../images/icons/location.svg";
+import { toast } from "react-toastify";
 Geocode.setApiKey("AIzaSyB7ApCKaTCdR01h2If_Kr6i6ZRu_YNCjvY");
 Geocode.enableDebug();
 
@@ -201,7 +202,7 @@ class Map extends Component {
                 }
               }
             }
-
+            this.props.setCity(city);
             this.props.changeAddress(
               address,
               area,
@@ -238,7 +239,7 @@ class Map extends Component {
         );
       });
     } else {
-      console.log("Geolocation is not supported by this browser.");
+      toast.error("Geolocation is not supported by this browser.");
     }
   }
 
@@ -274,7 +275,7 @@ class Map extends Component {
           city = this.getCity(addressArray),
           area = this.getArea(addressArray),
           state = this.getState(addressArray);
-
+        this.props.setCity(city);
         this.props.changeAddress(
           address,
           area,
@@ -327,7 +328,7 @@ class Map extends Component {
         state = this.getState(addressArray),
         latValue = place.geometry.location.lat(),
         lngValue = place.geometry.location.lng();
-
+      this.props.setCity(city);
       this.props.changeAddress(
         place.formatted_address,
         area,
