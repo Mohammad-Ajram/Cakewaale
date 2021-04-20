@@ -11,18 +11,18 @@ const CheckoutProductCard = ({ product }) => {
       <img
         src={product ? "https://cakewaale.com" + product.img : ""}
         alt="cake"
-        style={{ width: "20%", height: "60px" }}
+        style={{ width: "20%", height: "60px", objectFit: "contain" }}
       />
-      <label>
+      <label className="c-p-card-label">
         <span>
           {product.product_name} <br /> ({product.weight} pounds)
         </span>
       </label>
-      <label>
+      <label className="c-p-card-label">
         {" "}
         &nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;&nbsp;{
           product.quantity
-        } = <strong>₹{product.total_price}</strong>
+        } = <b>₹{product.total_price}</b>
       </label>
     </div>
   );

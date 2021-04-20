@@ -13,13 +13,14 @@ const Cart = ({ history }) => {
   const [subTotal, setSubTotal] = useState(0);
   const [cartTotal, setCartTotal] = useState(0);
   const [flavours, setFlavours] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const { customer } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
 
   useEffect(() => {
     const loadCartItemss = () => {
+      setLoading(true);
       if (customer) {
         getCartDetails(customer.token)
           .then((res) => {
@@ -145,26 +146,40 @@ const Cart = ({ history }) => {
             </div>
 
             <div className="col-md-4">
-              <h4>Price Details</h4>
-              <h6>
-                Total Items : <b>{cartItems.length}</b>
-              </h6>
-              <h6>
-                Sub Total : <b>₹{Math.round(subTotal)}</b>
-              </h6>
-              <h6>
-                Discount : <b>₹{Math.round(subTotal - cartTotal)}</b>
-              </h6>
-              <hr />
-              <h6>
-                Total Price : <b>₹{Math.round(cartTotal)}</b>
-              </h6>
-              <button
-                className="btn my-btn-primary btn-block"
-                onClick={handleCheckout}
-              >
-                Proceed to Checkout
-              </button>
+              <div className="mr-3 cart-price-details">
+                <h4 style={{ color: "#cb202d" }}>Price Details</h4>
+                <h5>
+                  Total Items{" "}
+                  <span className="float-right">{cartItems.length}</span>
+                </h5>
+                <h5>
+                  Sub Total{" "}
+                  <span className="float-right">₹{Math.round(subTotal)}</span>
+                </h5>
+                <h5>
+                  Discount{" "}
+                  <span className="float-right">
+                    ₹{Math.round(subTotal - cartTotal)}
+                  </span>
+                </h5>
+                <hr />
+                <h5>
+                  <b>
+                    {" "}
+                    Total Price
+                    <span className="float-right">
+                      ₹{Math.round(cartTotal)}
+                    </span>
+                  </b>
+                </h5>
+                <button
+                  className="btn my-btn-primary btn-block"
+                  onClick={handleCheckout}
+                  style={{ fontFamily: '"Montserrat", sans-serif' }}
+                >
+                  Proceed to Checkout
+                </button>
+              </div>
             </div>
           </div>
         </div>

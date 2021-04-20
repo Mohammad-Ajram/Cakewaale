@@ -15,6 +15,7 @@ import { checkPromo } from "../../functions/customer";
 import Map from "../../components/Map";
 
 const Checkout = ({ history }) => {
+  const [contact, setContact] = useState("");
   const [hNo, setHNo] = useState("");
   const [locality, setLocality] = useState("");
   const [landmark, setLandmark] = useState("");
@@ -22,12 +23,12 @@ const Checkout = ({ history }) => {
   const [deliveryDate, setDeliveryDate] = useState("");
   const [deliveryTime, setDeliveryTime] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
-  const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [promo, setPromo] = useState("");
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isCodModalVisible, setIsCodModalVisible] = useState(false);
+  const [isContactModalVisible, setIsContactModalVisible] = useState(false);
   const [isPickMyselfModalVisible, setIsPickMyselfModalVisible] = useState(
     false
   );
@@ -45,12 +46,14 @@ const Checkout = ({ history }) => {
     setIsModalVisible(false);
     setIsCodModalVisible(false);
     setIsPickMyselfModalVisible(false);
+    setIsContactModalVisible(false);
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
     setIsCodModalVisible(false);
     setIsPickMyselfModalVisible(false);
+    setIsContactModalVisible(false);
   };
   const dispatch = useDispatch();
 
@@ -80,7 +83,7 @@ const Checkout = ({ history }) => {
       setLocality(res.data.customer_detail.delivery_locality);
       setLandmark(res.data.customer_detail.delivery_landmark);
       setPincode(res.data.customer_detail.delivery_pincode);
-      setPhone(res.data.customer_detail.contact_one);
+      setContact(res.data.customer_detail.contact_one);
       setEmail(res.data.customer_detail.email);
     });
   }, [customer.token]);
@@ -124,7 +127,7 @@ const Checkout = ({ history }) => {
       currency: "INR",
       name: "Cakewaale",
       description: "Cake  Transaction",
-      image: { logo },
+      image: logo,
       order_id: order_id,
       handler: async function (response) {
         const data = {
@@ -158,7 +161,7 @@ const Checkout = ({ history }) => {
       prefill: {
         name: customer.name,
         email: email,
-        contact: phone,
+        contact: contact,
       },
       notes: {
         address: "Cakewaale Corporate Office",
@@ -194,10 +197,12 @@ const Checkout = ({ history }) => {
     if (!paymentMethod) toast.error("Please select payment method");
     else if (!deliveryDate || !deliveryTime)
       toast.error("Please select delivery time and date");
-    else if ((paymentMethod === "0" || paymentMethod === "1") && range === "0")
-      toast.error("Please select range");
-    else if (!hNo || !locality || !landmark || !pincode)
-      toast.error("Please add your delivery address");
+    else if (
+      (!hNo || !locality || !landmark || !pincode) &&
+      (paymentMethod === "0" || paymentMethod === "1")
+    )
+      toast.error("Please mark your delivery location on map");
+    else if (contact.length !== 10) setIsContactModalVisible(true);
     else
       placeOrder(
         deliveryDate + " " + deliveryTime + ":00",
@@ -254,6 +259,29 @@ const Checkout = ({ history }) => {
       )
       .then((res) => {
         if (res.data.success === "1") console.log("Address Changed");
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const changeContact = async (e) => {
+    e.preventDefault();
+    await axios
+      .put(
+        `${process.env.REACT_APP_API}/api/customer/profile/update`,
+        {
+          contact_one: contact,
+        },
+        {
+          headers: {
+            "x-customer-token": customer.token,
+          },
+        }
+      )
+      .then((res) => {
+        if (res.data.success === "1") {
+          toast.success("Contact Updated");
+          setIsContactModalVisible(false);
+        }
       })
       .catch((err) => console.log(err));
   };
@@ -358,6 +386,30 @@ const Checkout = ({ history }) => {
         </div>
       </Modal>
       <Modal
+        title="Update your contact number"
+        visible={isContactModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        centered
+      >
+        <div className="px-4 pb-2">
+          <label>Enter your contact number</label>
+          <input
+            type="number"
+            className="form-control"
+            value={contact}
+            onChange={(e) => setContact(e.target.value)}
+          />
+          <br />
+          <button
+            className="btn my-btn-primary btn-block"
+            onClick={changeContact}
+          >
+            Update Contact No.
+          </button>
+        </div>
+      </Modal>
+      <Modal
         title="Important Notice"
         visible={isCodModalVisible}
         onOk={handleOk}
@@ -403,7 +455,7 @@ const Checkout = ({ history }) => {
                 showCodModal();
               }}
             />
-            &nbsp; Cash on delivery
+            &nbsp; <span className="radio-label">Cash on delivery</span>
             <br />
             <input
               type="radio"
@@ -412,7 +464,10 @@ const Checkout = ({ history }) => {
               checked={paymentMethod === "1"}
               onChange={(e) => setPaymentMethod("1")}
             />
-            &nbsp;Pay online and get delivered to specified address
+            &nbsp;
+            <span className="radio-label">
+              Pay online and get delivered to specified address
+            </span>
             <br />
             <input
               type="radio"
@@ -424,7 +479,10 @@ const Checkout = ({ history }) => {
                 showPickMyselfModal();
               }}
             />
-            &nbsp;Pick myself and pay cash at our store
+            &nbsp;
+            <span className="radio-label">
+              Pick myself and pay cash at our store
+            </span>
             <br />
             <input
               type="radio"
@@ -436,7 +494,8 @@ const Checkout = ({ history }) => {
                 showPickMyselfModal();
               }}
             />
-            &nbsp;Pay online and pick myself
+            &nbsp;
+            <span className="radio-label">Pay online and pick myself</span>
             <br />
             <br />
             {/*{" "}
@@ -532,9 +591,9 @@ const Checkout = ({ history }) => {
             </button>
           </div>
           <div className="col-md-4 mt-5 px-5">
+            <h4 className="order-summary-title">Order Summary</h4>
             <h4 className="order-summary-title">
-              Order Summary
-              <br />({customer.cartItems ? customer.cartItems.length : 0} items)
+              ({customer.cartItems ? customer.cartItems.length : 0} items)
             </h4>
             <br />
             {products.length > 0 &&
