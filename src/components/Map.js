@@ -203,6 +203,7 @@ class Map extends Component {
               }
             }
             this.props.setCity(city);
+            this.props.setLocality(address);
             this.props.changeAddress(
               address,
               area,
@@ -276,6 +277,7 @@ class Map extends Component {
           area = this.getArea(addressArray),
           state = this.getState(addressArray);
         this.props.setCity(city);
+        this.props.setLocality(address);
         this.props.changeAddress(
           address,
           area,
@@ -329,6 +331,7 @@ class Map extends Component {
         latValue = place.geometry.location.lat(),
         lngValue = place.geometry.location.lng();
       this.props.setCity(city);
+      this.props.setLocality(address);
       this.props.changeAddress(
         place.formatted_address,
         area,

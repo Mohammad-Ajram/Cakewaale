@@ -195,10 +195,7 @@ const Checkout = ({ history }) => {
     if (!paymentMethod) toast.error("Please select payment method");
     else if (!deliveryDate || !deliveryTime)
       toast.error("Please select delivery time and date");
-    else if (
-      (!hNo || !locality || !landmark || !pincode) &&
-      (paymentMethod === "0" || paymentMethod === "1")
-    )
+    else if (!locality && (paymentMethod === "0" || paymentMethod === "1"))
       toast.error("Please mark your delivery location on map");
     else if (contact.length !== 10) setIsContactModalVisible(true);
     else if (city.toLowerCase() !== "dehradun")
@@ -540,6 +537,7 @@ const Checkout = ({ history }) => {
                   setRange={setRange}
                   changeAddress={changeAddress}
                   setCity={setCity}
+                  setLocality={setLocality}
                 />
                 <br />
                 <br />
