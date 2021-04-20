@@ -10,7 +10,7 @@ import Geocode from "react-geocode";
 import { GoogleMapsAPI } from "../client-config";
 import Autocomplete from "react-google-autocomplete";
 import { calcDist } from "../functions/customer";
-var distance = require("google-distance-matrix");
+import Location from "../images/icons/location.svg";
 Geocode.setApiKey("AIzaSyB7ApCKaTCdR01h2If_Kr6i6ZRu_YNCjvY");
 Geocode.enableDebug();
 
@@ -147,6 +147,101 @@ class Map extends Component {
       }
     }
   };
+  getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position, self) => {
+        console.log(
+          "Latitude: " +
+            position.coords.latitude +
+            "<br>Longitude: " +
+            position.coords.longitude
+        );
+        let newLat = position.coords.latitude,
+          newLng = position.coords.longitude;
+        Geocode.fromLatLng(newLat, newLng).then(
+          (response) => {
+            const address = response.results[0].formatted_address,
+              addressArray = response.results[0].address_components;
+            let city = "",
+              area = "",
+              state = "";
+            if (addressArray) {
+              for (let i = 0; i < addressArray.length; i++) {
+                if (
+                  addressArray[i].types[0] &&
+                  "administrative_area_level_2" === addressArray[i].types[0]
+                ) {
+                  city = addressArray[i].long_name;
+                }
+              }
+            }
+            if (addressArray) {
+              for (let i = 0; i < addressArray.length; i++) {
+                if (addressArray[i].types[0]) {
+                  for (let j = 0; j < addressArray[i].types.length; j++) {
+                    if (
+                      "sublocality_level_1" === addressArray[i].types[j] ||
+                      "locality" === addressArray[i].types[j]
+                    ) {
+                      area = addressArray[i].long_name;
+                    }
+                  }
+                }
+              }
+            }
+            if (addressArray) {
+              for (let i = 0; i < addressArray.length; i++) {
+                for (let i = 0; i < addressArray.length; i++) {
+                  if (
+                    addressArray[i].types[0] &&
+                    "administrative_area_level_1" === addressArray[i].types[0]
+                  ) {
+                    state = addressArray[i].long_name;
+                  }
+                }
+              }
+            }
+
+            this.props.changeAddress(
+              address,
+              area,
+              city,
+              state,
+              addressArray[addressArray.length - 1].short_name,
+              response.results[0].geometry.location.lat,
+              response.results[0].geometry.location.lng
+            );
+            calcDist(response.results[0].place_id).then((res) => {
+              if (res.data.success === "1")
+                this.props.setRange(
+                  Math.round(res.data.distance.distance / 1000)
+                );
+            });
+            this.setState({
+              address: address ? address : "",
+              area: area ? area : "",
+              city: city ? city : "",
+              state: state ? state : "",
+              markerPosition: {
+                lat: newLat,
+                lng: newLng,
+              },
+              mapPosition: {
+                lat: newLat,
+                lng: newLng,
+              },
+            });
+          },
+          (error) => {
+            console.error(error);
+          }
+        );
+      });
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+    }
+  }
+
   /**
    * And function for city,state and address input
    * @param event
@@ -309,6 +404,7 @@ class Map extends Component {
             onPlaceSelected={this.onPlaceSelected}
             types={["geocode", "establishment"]}
             componentRestrictions={{ country: "ind" }}
+            placeholder="Enter your delivery location"
           />
         </GoogleMap>
       ))
@@ -323,7 +419,22 @@ class Map extends Component {
             containerElement={<div style={{ height: this.props.height }} />}
             mapElement={<div style={{ height: `100%` }} />}
           />
+
           <br />
+          <br />
+          <h5
+            className="text-center"
+            style={{ fontFamily: '"Lato",sans-serif' }}
+          >
+            Or
+          </h5>
+          <button
+            onClick={(position) => this.getLocation(position, this)}
+            className="btn btn-block location-btn"
+          >
+            <img src={Location} alt="precise location" />
+            Use my current location
+          </button>
           <br />
           <br />
           <div>
