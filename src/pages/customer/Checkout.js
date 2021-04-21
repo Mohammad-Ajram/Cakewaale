@@ -278,6 +278,7 @@ const Checkout = ({ history }) => {
       .then((res) => {
         if (res.data.success === "1") {
           toast.success("Contact Updated");
+          setContact(input1.current.value);
           setIsContactModalVisible(false);
         }
       })
