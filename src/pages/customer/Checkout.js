@@ -606,27 +606,36 @@ const Checkout = ({ history }) => {
                 <CheckoutProductCard key={item.product_id} product={item} />
               ))}
             <hr />
-            <div style={{ width: "100%" }}>
-              <span className="checkout-label">Delivery Charges</span>
-              <span className="float-right checkout-label">
-                <strong>₹{range * 10}</strong>
-              </span>
-              <br />
-              {range !== "0" && (
+            {range !== "0" && city.toLowerCase() === "dehradun" && (
+              <div style={{ width: "100%" }}>
+                <span className="checkout-label">Delivery Charges</span>
+                <span className="float-right checkout-label">
+                  <strong>₹{range * 10}</strong>
+                </span>
+                <br />
+
                 <span className="checkout-label">
                   <small>
                     Your approximate distance from our store is {range} kms
                   </small>
                 </span>
-              )}
-            </div>
+              </div>
+            )}
             <br />
             <div style={{ width: "100%" }}>
               <span className="checkout-label">
-                Total<small>(including delivery charges)</small>
+                Total{" "}
+                {range !== "0" && city.toLowerCase() === "dehradun" && (
+                  <small>(including delivery charges)</small>
+                )}
               </span>
               <span className="float-right checkout-label">
-                <strong>₹{total + range * 10}</strong>
+                <strong>
+                  ₹
+                  {range !== "0" && city.toLowerCase() === "dehradun"
+                    ? total + range * 10
+                    : total}
+                </strong>
               </span>
             </div>
             {couponDiscount > 0 && (
