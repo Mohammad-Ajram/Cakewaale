@@ -17,7 +17,7 @@ const PreviousOrders = ({ history }) => {
         })
         .catch((err) => console.log(err));
     loadPreviousOrders();
-  }, [customer.token]);
+  }, []);
   console.log(previousOrders);
 
   return (

@@ -47,6 +47,14 @@ function App() {
                 type: "GET_CART",
                 payload: { ...customer, cartItems: res.data.cart_items },
               });
+            } else if (
+              res.data.success === "0" &&
+              res.data.message === "Token not valid!!"
+            ) {
+              dispatch({
+                type: "LOG_OUT_CUSTOMER",
+                payload: null,
+              });
             } else
               dispatch({
                 type: "GET_CART",

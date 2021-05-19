@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Logo from "../../images/logo.png";
+import Logo from "../../images/logo.jpeg";
 import { Drawer } from "antd";
 import { useHistory } from "react-router-dom";
 import Cart from "../../images/icons/shopping-cart.svg";

@@ -13,6 +13,7 @@ const OngoingOrders = ({ history }) => {
     getOngoingOrders(customer.token)
       .then((res) => {
         if (res.data.Ongoing_Orders) setOngoingOrders(res.data.Ongoing_Orders);
+        else setOngoingOrders([]);
       })
       .catch((err) => console.log(err));
   useEffect(() => {
@@ -25,19 +26,21 @@ const OngoingOrders = ({ history }) => {
         })
         .catch((err) => console.log(err));
     loadOngoingOrderss();
-  }, [customer.token]);
+  }, []);
 
   const cancelOngoingOrder = (order_id, online_status) => {
-    cancelOrder(order_id, customer.token).then((res) => {
-      if (res.data.success === "1") {
-        loadOngoingOrders();
-        if (online_status === "0") toast.error("Order Cancelled");
-        else
-          toast.error(
-            "Order Cancelled. Your payment will be refunded within 24 hrs. If payment doesn't get refunded within 24 hrs then contact us at +91-7017554779"
-          );
-      }
-    });
+    if (window.confirm("Are you sure that you want to cancel the order?")) {
+      cancelOrder(order_id, customer.token).then((res) => {
+        if (res.data.success === "1") {
+          loadOngoingOrders();
+          if (online_status === "0") toast.error("Order Cancelled");
+          else
+            toast.error(
+              "Order Cancelled. Your payment will be refunded within 24 hrs. If payment doesn't get refunded within 24 hrs then contact us at +91-7017554779"
+            );
+        }
+      });
+    }
   };
 
   return (

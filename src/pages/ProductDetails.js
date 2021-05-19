@@ -121,7 +121,8 @@ const ProductDetails = ({ history }) => {
     }
   };
 
-  const addItemToCart = () => {
+  const addItemToCart = (redirect) => {
+    console.log("r", redirect);
     if (customer && customer.token) {
       addToCart(
         product.product_id,
@@ -132,7 +133,7 @@ const ProductDetails = ({ history }) => {
       )
         .then((res) => {
           if (res.data.success === "1") {
-            toast.success("Item added to cart");
+            if (!redirect) toast.success("Item added to cart");
             getCartDetails(customer.token)
               .then((response) => {
                 if (response.data.success === "1")
@@ -145,6 +146,7 @@ const ProductDetails = ({ history }) => {
                   });
               })
               .catch((err) => console.log(err));
+            if (redirect) history.push("/user/cart");
           } else if (
             res.data.success === "0" &&
             res.data.message === "Item already in cart"
@@ -352,9 +354,16 @@ const ProductDetails = ({ history }) => {
 
                 <button
                   className="btn my-btn-primary btn-block"
-                  onClick={addItemToCart}
+                  onClick={() => addItemToCart(false)}
                 >
                   Add to Cart
+                </button>
+                <br />
+                <button
+                  className="btn my-btn-primary btn-block"
+                  onClick={() => addItemToCart(true)}
+                >
+                  Buy Now
                 </button>
                 <br />
                 <button
