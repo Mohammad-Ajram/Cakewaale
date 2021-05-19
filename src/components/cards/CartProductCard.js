@@ -47,6 +47,8 @@ const CartProductCard = ({
   const dispatch = useDispatch();
 
   useEffect(() => {
+    setDiscountedPrice(product.total_price);
+    setPrice(Math.round(product.total_price * (100 / (100 - discount))));
     getIndividualProduct(product.product_id).then((res) =>
       setMinWeight(res.data.Product.weight)
     );
@@ -120,6 +122,11 @@ const CartProductCard = ({
       if (res.data.success === "1") {
         if (showToast) toast.warning("Item removed from cart!");
         loadCartItems();
+        const discount = Math.round(
+          (product.discounted_price / product.price) * 100
+        );
+        setCartTotal(cartTotal - product.total_price);
+        setSubTotal(subTotal - product.total_price * (100 / discount));
         getCartDetails(customer.token)
           .then((res) => {
             if (res.data.success === "1")

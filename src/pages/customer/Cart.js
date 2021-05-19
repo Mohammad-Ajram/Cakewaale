@@ -71,8 +71,9 @@ const Cart = ({ history }) => {
   const loadCartItems = () =>
     getCartDetails(customer.token)
       .then((res) => {
-        if (res.data.success === "1") setCartItems(res.data.cart_items);
-        else setCartItems([]);
+        if (res.data.success === "1") {
+          setCartItems(res.data.cart_items);
+        } else setCartItems([]);
       })
       .catch((err) => console.log(err));
 

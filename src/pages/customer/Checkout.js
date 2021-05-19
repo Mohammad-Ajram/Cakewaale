@@ -28,10 +28,9 @@ const Checkout = ({ history }) => {
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isCodModalVisible, setIsCodModalVisible] = useState(false);
-  const [isContactModalVisible, setIsContactModalVisible] = useState(false);
-  const [isPickMyselfModalVisible, setIsPickMyselfModalVisible] = useState(
-    false
-  );
+  // const [isContactModalVisible, setIsContactModalVisible] = useState(false);
+  const [isPickMyselfModalVisible, setIsPickMyselfModalVisible] =
+    useState(false);
   const [products, setProducts] = useState([]);
   const [range, setRange] = useState("0");
 
@@ -44,14 +43,12 @@ const Checkout = ({ history }) => {
     setIsModalVisible(false);
     setIsCodModalVisible(false);
     setIsPickMyselfModalVisible(false);
-    setIsContactModalVisible(false);
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
     setIsCodModalVisible(false);
     setIsPickMyselfModalVisible(false);
-    setIsContactModalVisible(false);
   };
   const dispatch = useDispatch();
 
@@ -197,7 +194,8 @@ const Checkout = ({ history }) => {
       toast.error("Please select delivery time and date");
     else if (!locality && (paymentMethod === "0" || paymentMethod === "1"))
       toast.error("Please mark your delivery location on map");
-    else if (contact.length !== 10) setIsContactModalVisible(true);
+    else if (input1.current.value.length !== 10)
+      toast.error("Please provide your valid contact number");
     else if (city.toLowerCase() !== "dehradun")
       toast.error("We are delivering only in Dehradun right now.");
     else
@@ -260,30 +258,30 @@ const Checkout = ({ history }) => {
       .catch((err) => console.log(err));
   };
 
-  const changeContact = async (e) => {
-    e.preventDefault();
+  // const changeContact = async (e) => {
+  //   e.preventDefault();
 
-    await axios
-      .put(
-        `${process.env.REACT_APP_API}/api/customer/profile/update`,
-        {
-          contact_one: input1.current.value,
-        },
-        {
-          headers: {
-            "x-customer-token": customer.token,
-          },
-        }
-      )
-      .then((res) => {
-        if (res.data.success === "1") {
-          toast.success("Contact Updated");
-          setContact(input1.current.value);
-          setIsContactModalVisible(false);
-        }
-      })
-      .catch((err) => console.log(err));
-  };
+  //   await axios
+  //     .put(
+  //       `${process.env.REACT_APP_API}/api/customer/profile/update`,
+  //       {
+  //         contact_one: input1.current.value,
+  //       },
+  //       {
+  //         headers: {
+  //           "x-customer-token": customer.token,
+  //         },
+  //       }
+  //     )
+  //     .then((res) => {
+  //       if (res.data.success === "1") {
+  //         toast.success("Contact Updated");
+  //         setContact(input1.current.value);
+  //         setIsContactModalVisible(false);
+  //       }
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
 
   const showCodModal = () => setIsCodModalVisible(true);
 
@@ -384,7 +382,7 @@ const Checkout = ({ history }) => {
           </form>
         </div>
       </Modal>
-      <Modal
+      {/* <Modal
         title="Update your contact number"
         visible={isContactModalVisible}
         onOk={handleOk}
@@ -411,7 +409,7 @@ const Checkout = ({ history }) => {
             Update Contact No.
           </button>
         </div>
-      </Modal>
+      </Modal> */}
       <Modal
         title="Important Notice"
         visible={isCodModalVisible}
@@ -548,6 +546,19 @@ const Checkout = ({ history }) => {
             <br />
             <input type="text" className="form-control" />
             <br /> */}
+            <label className="checkout-label">Provide your Contact No.</label>
+            <br />
+            <div className="input-group prefix">
+              <span className="input-group-addon ">+91</span>
+              <input
+                type="number"
+                ref={input1}
+                className="form-control"
+                style={{ width: "100%" }}
+                defaultValue={contact}
+              />
+            </div>
+            <br />
             <label className="checkout-label">Select delivery date</label>
             <input
               type="date"

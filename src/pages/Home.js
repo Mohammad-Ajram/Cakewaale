@@ -1,6 +1,6 @@
-import Cake from "../images/cake.png";
 import "../index.css";
-import AP from "../images/Allura Proposal.png";
+import Lcover from "../images/lcover.jpeg";
+import Scover from "../images/scover.jpeg";
 import Ocassion from "../components/home/Ocassion";
 import Profession from "../components/home/Profession";
 import Offer from "../components/home/Offer";
@@ -172,7 +172,7 @@ const Home = ({ history }) => {
         </div>
       </Modal>
       <div className="cover container-fluid">
-        <h1 className="cover-title my-auto">
+        {/* <h1 className="cover-title my-auto">
           Send personalised cakes to your loved ones!
           <br />
           <button className="btn  my-btn-primary pointer" onClick={showModal}>
@@ -180,7 +180,25 @@ const Home = ({ history }) => {
           </button>
         </h1>
         <img src={AP} alt="allura_propasal" className="ap" />
-        <img src={Cake} className="cake-image" alt="cake" />
+        <img src={Cake} className="cake-image" alt="cake" /> */}
+        <img
+          src={Lcover}
+          id="lcover"
+          alt="cover"
+          style={{ height: "100%", width: "100%", objectFit: "contain" }}
+        />
+        <img
+          src={Scover}
+          id="scover"
+          alt="cover"
+          style={{ height: "100%", width: "100%", objectFit: "contain" }}
+        />
+        <button
+          className="btn  my-btn-primary pointer cta-btn"
+          onClick={showModal}
+        >
+          ORDER NOW
+        </button>
       </div>
       <div className="container-fluid section">
         <Ocassion />
