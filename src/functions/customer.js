@@ -220,3 +220,22 @@ export const calcDist = async (place_id) =>
   await axios.post(`${process.env.REACT_APP_API}/api/customer/get/distance`, {
     place_id,
   });
+
+export const makeBDev = async (customer_id) =>
+  await axios.post(
+    `${process.env.REACT_APP_API}/b_dev/make/business_developer`,
+    {
+      customer_id,
+    }
+  );
+
+export const makeBDevPass = async (customer_id, password) =>
+  await axios.post(`${process.env.REACT_APP_API}/b_dev/change/password`, {
+    customer_id,
+    password,
+  });
+
+export const incVisCount = async (id) =>
+  await axios.put(
+    `${process.env.REACT_APP_API}/b_dev/increase/count?referal_id=${id}`
+  );

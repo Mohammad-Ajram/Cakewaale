@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { Avatar } from "antd";
-import { getProfile } from "../functions/customer";
+import { getProfile, incVisCount } from "../functions/customer";
 import scriptLoader from "react-async-script-loader";
 
 const Home = ({ history }) => {
@@ -28,6 +28,22 @@ const Home = ({ history }) => {
   const { customer } = useSelector((state) => ({ ...state }));
 
   useEffect(() => {
+    const query = new URLSearchParams(history.location.search);
+    const token = query.get("id");
+
+    if (token) {
+      if (!window.localStorage.getItem("id")) {
+        incVisCount(token)
+          .then((res) => {
+            if (res.data.success === "1")
+              window.localStorage.setItem("id", token);
+          })
+          .catch((err) => console.log(err));
+      }
+    }
+  }, []);
+
+  useEffect(() => {
     if (customer && customer.token) {
       getProfile(customer.token).then((res) => {
         setHNo(res.data.customer_detail.delivery_houseNo);
@@ -39,7 +55,6 @@ const Home = ({ history }) => {
   }, []);
 
   const showModal = () => {
-    console.log("CLICKED");
     if (!customer) history.push("/login");
     else setIsModalVisible(true);
   };
@@ -197,7 +212,7 @@ const Home = ({ history }) => {
           className="btn  my-btn-primary pointer cta-btn"
           onClick={showModal}
         >
-          ORDER NOW
+          ORDER CUSTOMIZED CAKE
         </button>
       </div>
       <div className="container-fluid section">

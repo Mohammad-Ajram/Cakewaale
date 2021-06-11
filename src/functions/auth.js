@@ -17,7 +17,8 @@ export const signupCustomer = async (
   locality,
   city,
   state,
-  pincode
+  pincode,
+  referer_id
 ) =>
   await axios.post(`${process.env.REACT_APP_API}/api/customer/create`, {
     name,
@@ -31,6 +32,7 @@ export const signupCustomer = async (
     city,
     state,
     pincode,
+    referer_id,
     delivery_houseNo: houseNo,
     delivery_landmark: landmark,
     delivery_locality: locality,

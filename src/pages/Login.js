@@ -5,7 +5,7 @@ import { loginCustomer } from "../functions/auth";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { getCartDetails } from "../functions/customer";
+import { getCartDetails, incVisCount } from "../functions/customer";
 import { GoogleLogin } from "react-google-login";
 
 const Login = ({ history }) => {
@@ -15,6 +15,21 @@ const Login = ({ history }) => {
   const dispatch = useDispatch();
 
   const { customer } = useSelector((state) => ({ ...state }));
+
+  useEffect(() => {
+    const query = new URLSearchParams(history.location.search);
+    const token = query.get("id");
+    if (token) {
+      if (!window.localStorage.getItem("id")) {
+        incVisCount(token)
+          .then((res) => {
+            if (res.data.success === "1")
+              window.localStorage.setItem("id", token);
+          })
+          .catch((err) => console.log(err));
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (customer && customer.token) history.push("/");
@@ -65,6 +80,9 @@ const Login = ({ history }) => {
         .post(`${process.env.REACT_APP_API}/login/google`, {
           email: response.profileObj.email,
           name: response.profileObj.name,
+          referer_id: window.localStorage.getItem("id")
+            ? window.localStorage.getItem("id")
+            : "",
         })
         .then((res) => {
           if (res.data.success === "1") {
